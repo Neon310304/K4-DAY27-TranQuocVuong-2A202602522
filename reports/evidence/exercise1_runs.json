@@ -1,0 +1,60 @@
+{
+  "format_version": 1,
+  "timestamp_utc": "2026-10-15T06:53:01.222033+00:00",
+  "scope": "Exercise 1 direct-file CLI; actual GitHub reads and YesScale LLM requests; terminal branches only, no human decisions or GitHub comments",
+  "llm_base_url": "https://api.yescale.io/v1",
+  "llm_model_requested": "gpt-4o-mini",
+  "thresholds": {
+    "auto_approve_min": 0.73,
+    "escalate_below": 0.58
+  },
+  "source_hashes": {
+    "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
+    "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
+    "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+    "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+    "exercises/exercise_2_hitl.py": "87ce133ed85994fec3f6dd598f31e7eb45b66ff2238c56ff427cf210a19f7aae",
+    "exercises/exercise_3_escalation.py": "a55fc4b17cc11f94dd2fa4a5ec1bfbe42b9917b0bb4c99f2eb02d5e5e43d7388",
+    "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+    "exercises/review_support.py": "e1906d7de4b6c6099623a60e13b87a2c4a41b3a3fe02ebe39f497b2bd52e34f7",
+    "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+    "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+    "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+    "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+    "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+    "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d",
+    "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
+  },
+  "runs": [
+    {
+      "pr_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/1",
+      "command": "uv run python exercises/exercise_1_confidence.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/1",
+      "exit_code": 0,
+      "stdout": "─────────────────────────────────────────── Exercise 1 — confidence routing ───────────────────────────────────────────\nPR: https://github.com/VinUni-AI20k/PR-Demo/pull/1\n\n→ fetch_pr\n  ✓ 3 files, head 1646156\n→ analyze\n→ route\n✓ HUMAN APPROVAL — placeholder, exercise 2 will pause here\n──────────────────────────────────────────────────────── Final ────────────────────────────────────────────────────────\nconfidence = 65%\naction     = pending_human_approval\n",
+      "stderr": "",
+      "final_action": "pending_human_approval",
+      "confidence_display_percent": 65
+    },
+    {
+      "pr_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/2",
+      "command": "uv run python exercises/exercise_1_confidence.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/2",
+      "exit_code": 0,
+      "stdout": "─────────────────────────────────────────── Exercise 1 — confidence routing ───────────────────────────────────────────\nPR: https://github.com/VinUni-AI20k/PR-Demo/pull/2\n\n→ fetch_pr\n  ✓ 4 files, head 501f95e\n→ analyze\n→ route\n✓ ESCALATE — placeholder, exercise 3 will ask the reviewer questions\n──────────────────────────────────────────────────────── Final ────────────────────────────────────────────────────────\nconfidence = 55%\naction     = pending_escalation\n",
+      "stderr": "",
+      "final_action": "pending_escalation",
+      "confidence_display_percent": 55
+    }
+  ],
+  "github_comments_posted": 0,
+  "distinct_final_actions": [
+    "pending_escalation",
+    "pending_human_approval"
+  ],
+  "offline_validation": {
+    "command": "uv run pytest tests/test_review_agent.py -q -k 'threshold_boundaries or exercise1_real_graph_routes_all_paths'",
+    "passed": 10,
+    "deselected": 20,
+    "result": "passed"
+  }
+}

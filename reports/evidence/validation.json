@@ -72,11 +72,12 @@
     "reports/evidence/browser_controls.json": "39c4fe17a9560edc9d922c6b5c43f7accfa357d53b70536f6b457865c989be07",
     "reports/evidence/live_runs.json": "b8aff06b9401989327d1e8b5c14d26d351122a1b1245a7a0c81c48fdcd7d2a06",
     "reports/evidence/offline_runs.json": "1d1e2f2678ded09b0fee6828da2d705ba55dd611f189d63e3d95624e6d723338",
-    "reports/evidence/README.md": "332cb3ee1d10f0d518fddb588f45daf356e4d8324c29a73604c259d982d4f2ee",
+    "reports/evidence/README.md": "91ff39709efd4722a2b8b0cbd3e995250c31ff33a72dce14ed6bb467f08b78c2",
     "reports/evidence/setup.json": "429bc0245989dbf6775ae0d307339626210a699214b33abb8c24da8a063f6e40",
     "docs/SETUP.md": "8630a25584abe31d76648fd4f0446fe99c8cccdf86de89d2eaf8c16baec17df5",
-    "README.md": "99e19c63e52d2a75f1dad2b7659f2894dd8206888a66f1af69a28ac2bf3da1e3",
-    "reports/REPORT.md": "806e426da28938ab64c2e123ec516b9d14f739be92b2c0215cac6a1b8d9fdecd"
+    "README.md": "71d6a5dd4af90c0fca6781341e390c8415ab0eacddfda75ae68344ad34fd3bd2",
+    "reports/REPORT.md": "5f36b2622c3c7cb7b1488de2fb26cb64a6bff3f32047704102bf56ecc1a7ee0d",
+    "reports/evidence/exercise1_runs.json": "079b2d9ab5a4caed3516e6e629bf1d81498b01749e135c0d4ec9922ab02cba5b"
   },
   "historical_live_execution_source_differences": [
     "app.py",
@@ -108,6 +109,13 @@
     "report": "reports/evidence/setup.json",
     "scope": "repository rename, fresh environment, credential checks and documentation; no application source changes",
     "previous_evidence_index_hash": "321c4c3154c3350fe02f49617f8c7d4f1bcdf687010a158d89b54c708db84151",
+    "source_hashes_unchanged": true
+  },
+  "subsequent_exercise1_check": {
+    "timestamp_utc": "2026-10-15T06:53:50.724170+00:00",
+    "report": "reports/evidence/exercise1_runs.json",
+    "scope": "two actual direct-file CLI runs requested by Exercise 1; no application source changes",
+    "previous_evidence_index_hash": "332cb3ee1d10f0d518fddb588f45daf356e4d8324c29a73604c259d982d4f2ee",
     "source_hashes_unchanged": true
   }
 }

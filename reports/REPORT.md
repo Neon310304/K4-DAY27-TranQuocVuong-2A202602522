@@ -16,6 +16,8 @@ Các kết quả máy đọc được nằm trong [evidence](evidence/), ảnh n
 
 ## Hai PR thật
 
+Các hàng dưới là hai checkpoint live được dùng trong UI. Lần kiểm tra CLI Exercise 1 riêng ở [exercise1_runs.json](evidence/exercise1_runs.json) dùng đúng hai lệnh `uv run python exercises/exercise_1_confidence.py --pr ...` của đề, lấy PR và gọi YesScale thật: PR #1 **65% → pending_human_approval**, PR #2 **55% → pending_escalation**. Cả hai in đúng nhánh mong đợi; graph Exercise 1 chỉ kết thúc ở placeholder, không interrupt hay đăng comment. Mười tests về biên ngưỡng và ba nhánh graph đều đạt. Giữ nguyên `common/` và ngưỡng 0.58/0.73; không ép nhánh theo ID PR. Confidence mới được giữ riêng, không ghi đè số 0.50 của lần chạy UI trước.
+
 | PR | Model được request | Confidence | Nhánh thực tế | Trạng thái |
 |---|---|---|---|---|
 | [PR-Demo #1](https://github.com/VinUni-AI20k/PR-Demo/pull/1) | `gpt-4o-mini` qua YesScale | 0.65 | `human_approval` | Chờ reviewer |
