@@ -4,7 +4,7 @@
 
 Agent review pull request bằng LangGraph, dừng chờ người duyệt khi cần, và lưu toàn bộ quyết định vào SQLite. Streamlit cung cấp giao diện đọc diff, Approve / Reject / Edit, trả lời escalation và mở lại phiên đã lưu.
 
-[Đề bài gốc](docs/LAB.md) · [Báo cáo kết quả](reports/REPORT.md) · [Ảnh bằng chứng](screenshots/README.md)
+[Đề bài gốc](docs/LAB.md) · [Báo cáo kết quả](reports/REPORT.md) · [Ảnh bằng chứng](screenshots/README.md) · [Kiểm tra trước khi nộp](reports/SUBMISSION.md)
 
 ![Review một PR thật qua YesScale](screenshots/07-live-pr1.png)
 

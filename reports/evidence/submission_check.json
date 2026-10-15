@@ -1,0 +1,150 @@
+{
+  "timestamp_utc": "2026-10-15T08:08:15.710644+00:00",
+  "repository": {
+    "url": "https://github.com/Neon310304/K4-DAY27-TranQuocVuong-2A202602522",
+    "fork": true,
+    "parent": "VinUni-AI20k/VinUni-AI20k-Day27-Track03-HITL",
+    "public": true,
+    "anonymous_http_status": 200,
+    "authenticated_username": "Neon310304",
+    "branch": "main"
+  },
+  "clean_clone": {
+    "sha": "cfbe05ecba0db31c5cea233836e1dda01328867e",
+    "env_from_example": true,
+    "sync_command": "uv sync",
+    "sync_exit_code": 0,
+    "python_version": "Python 3.11.15",
+    "source_hashes_match": true,
+    "git_status_clean_after_local_env_and_database": true,
+    "api_credentials_used": false
+  },
+  "scope": "Offline clone/install/test, CLI import/help, real demo CLI and Streamlit/SQLite. Actual provider calls are documented in earlier evidence, not claimed as repeated here.",
+  "checks": [
+    {
+      "command": "uv run pytest -q",
+      "exit_code": 0,
+      "stdout": "...............................................                          [100%]\n47 passed in 54.31s\n",
+      "stderr": "warning: `VIRTUAL_ENV=D:\\Python\\K4-DAY27-TranQuocVuong-2A202602522\\.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n"
+    },
+    {
+      "command": "uv run python exercises/exercise_1_confidence.py --help",
+      "exit_code": 0,
+      "stdout": "usage: exercise_1_confidence.py [-h] --pr PR\n\noptions:\n  -h, --help  show this help message and exit\n  --pr PR\n",
+      "stderr": "warning: `VIRTUAL_ENV=D:\\Python\\K4-DAY27-TranQuocVuong-2A202602522\\.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n"
+    },
+    {
+      "command": "uv run python exercises/exercise_2_hitl.py --help",
+      "exit_code": 0,
+      "stdout": "usage: exercise_2_hitl.py [-h] --pr PR [--publish | --preview]\n                          [--evidence EVIDENCE]\n\nExercise 2: pause for approval; reject/edit both skip publication. The\nedit/confirm helpers remain available for optional extensions.\n\noptions:\n  -h, --help           show this help message and exit\n  --pr PR\n  --publish            Post after approval (lab default)\n  --preview            Keep approved review as a local draft\n  --evidence EVIDENCE  Save graph snapshots and pending payload as JSON\n",
+      "stderr": "warning: `VIRTUAL_ENV=D:\\Python\\K4-DAY27-TranQuocVuong-2A202602522\\.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n"
+    },
+    {
+      "command": "uv run python exercises/exercise_3_escalation.py --help",
+      "exit_code": 0,
+      "stdout": "usage: exercise_3_escalation.py [-h] --pr PR [--publish | --preview]\n                                [--evidence EVIDENCE]\n\nExercise 3: specific reviewer Q&A, then synthesis and publication.\n\noptions:\n  -h, --help           show this help message and exit\n  --pr PR\n  --publish            Publish the review (lab default)\n  --preview            Synthesize a draft without posting\n  --evidence EVIDENCE  Save graph snapshots and pending payload as JSON\n",
+      "stderr": "warning: `VIRTUAL_ENV=D:\\Python\\K4-DAY27-TranQuocVuong-2A202602522\\.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n"
+    },
+    {
+      "command": "uv run python exercises/exercise_4_audit.py --help",
+      "exit_code": 0,
+      "stdout": "usage: exercise_4_audit.py [-h] --pr PR [--thread THREAD] [--demo] [--publish]\n\nExercise 4: durable sessions and one structured audit row per node execution.\nInterrupt nodes log pending before interrupt and the response after it.\nResuming replays the node, so its pre-interrupt pending row is intentionally\nrepeated.\n\noptions:\n  -h, --help       show this help message and exit\n  --pr PR\n  --thread THREAD  Reopen the persisted session; never refetches or reanalyzes\n  --demo           Synthetic offline fixtures, no APIs\n  --publish        Post comments to GitHub\n",
+      "stderr": "warning: `VIRTUAL_ENV=D:\\Python\\K4-DAY27-TranQuocVuong-2A202602522\\.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n"
+    },
+    {
+      "command": "uv run python -m audit.replay --help",
+      "exit_code": 0,
+      "stdout": "usage: replay.py [-h] [--thread THREAD] [--list]\n\noptions:\n  -h, --help       show this help message and exit\n  --thread THREAD  Replay one thread by id\n  --list           List recent threads\n",
+      "stderr": "warning: `VIRTUAL_ENV=D:\\Python\\K4-DAY27-TranQuocVuong-2A202602522\\.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n"
+    },
+    {
+      "command": "uv run python exercises/exercise_4_audit.py --demo --pr https://github.com/demo/shop/pull/1",
+      "exit_code": 0,
+      "stdout": "thread_id = 3203b061-bcc8-4275-bb36-34857687b926\n┌───────────────────────────── Approval request ──────────────────────────────┐\n│ Confidence: 65%                                                             │\n│                                                                             │\n│ Reasoning: A reviewer needs to confirm schema migration for existing tasks. │\n│                                                                             │\n│ Summary: Synthetic demo: adds task priority with a default value.           │\n│                                                                             │\n│ Proposed comments:                                                          │\n│ [suggestion] models.py:2: Confirm existing records receive the default      │\n│ priority.                                                                   │\n│                                                                             │\n│ Diff preview (first 2,000 characters):                                      │\n│ diff --git a/models.py b/models.py                                          │\n│ --- a/models.py                                                             │\n│ +++ b/models.py                                                             │\n│ @@ -1 +1,2 @@                                                               │\n│  class Task:                                                                │\n│ +    priority: int = 0                                                      │\n│                                                                             │\n└─────────────────────────────────────────────────────────────────────────────┘\nChoice (approve/reject/edit)? Replacement review / feedback: final_action = rejected\nReplay: uv run python -m audit.replay --thread 3203b061-bcc8-4275-bb36-34857687b926\n",
+      "stderr": "warning: `VIRTUAL_ENV=D:\\Python\\K4-DAY27-TranQuocVuong-2A202602522\\.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n"
+    },
+    {
+      "command": "uv run python -m audit.replay --list",
+      "exit_code": 0,
+      "stdout": "                            Recent review sessions                             \n┌─────────────┬─────────────┬─────────────┬─────────────┬────────────┬────────┐\n│ thread_id   │ pr_url      │ started     │ last_event  │ worst_risk │ events │\n├─────────────┼─────────────┼─────────────┼─────────────┼────────────┼────────┤\n│ 3203b061-b… │ https://gi… │ 2026-10-15… │ 2026-10-15… │ med        │ 7      │\n└─────────────┴─────────────┴─────────────┴─────────────┴────────────┴────────┘\n",
+      "stderr": "warning: `VIRTUAL_ENV=D:\\Python\\K4-DAY27-TranQuocVuong-2A202602522\\.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n"
+    }
+  ],
+  "browser": {
+    "timestamp_utc": "2026-10-15T08:06:39.865864+00:00",
+    "clone_head": "cfbe05ecba0db31c5cea233836e1dda01328867e",
+    "python_version": "Python 3.11.15",
+    "browser_checks": [
+      "Clean clone starts Streamlit",
+      "Run review pauses at approval",
+      "Reload restores pending checkpoint",
+      "Reject completes without publication",
+      "SQLite records one fetch and one analyze"
+    ],
+    "thread_id": "7dd2e09d-852b-4fa6-8928-4e6b0a9201d0",
+    "actions": [
+      [
+        "fetch_pr",
+        "pending"
+      ],
+      [
+        "analyze",
+        "pending"
+      ],
+      [
+        "route",
+        "pending"
+      ],
+      [
+        "human_approval",
+        "pending"
+      ],
+      [
+        "human_approval",
+        "pending"
+      ],
+      [
+        "human_approval",
+        "reject"
+      ],
+      [
+        "commit",
+        "reject"
+      ]
+    ],
+    "github_comments_posted": 0,
+    "configured_key_usage": "No real API keys; .env copied from .env.example, offline demo only"
+  },
+  "source_hashes": {
+    "app.py": "564299d59df7b1caac6ed7253bc485d2284319b86a13b83ef6fb24c4c3eb80e7",
+    "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
+    "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+    "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+    "exercises/exercise_2_hitl.py": "55495549fe779958cfa556b13dbd422b0fe96d424b8070e81b7f55f4cfa76d04",
+    "exercises/exercise_3_escalation.py": "5e1d0ced32f4747f284e8fa237d495fdb779ffdb390eaa619ecd9d9a5aeebf68",
+    "exercises/exercise_4_audit.py": "87249e36dbd2cbef90655760cb40a47505e3c14c1b2415b86364612c991cfb0d",
+    "exercises/review_support.py": "9a9bd723d0f38f39981b0250b6b35826e917034cc6d4959dd3fd47fed8202d53",
+    "exercises/runtime.py": "4e45425ff14f4f1f1db69fe2df9dcb02513a494b4d4184cdd601970bb19ec89b",
+    "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+    "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+    "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+    "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+    "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d",
+    "audit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "audit/replay.py": "309b32e978d005a479c5d37cf6266e65d82c5f7a6d808e33f242577bebdc4172",
+    "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
+  },
+  "tracked_private_files": [],
+  "public_review_comment": {
+    "checked_prs": [
+      1,
+      2
+    ],
+    "own_comments_found": 0,
+    "status": "awaiting_user_review_approval",
+    "candidate_draft": "reports/drafts/exercise2-review.md",
+    "thread_id": "68d03c86-3254-4c62-847e-22cea4147944"
+  },
+  "class_submission": "No Day27 form URL or confirmation supplied; no claim of submitting to class portal."
+}

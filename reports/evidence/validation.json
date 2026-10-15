@@ -92,16 +92,18 @@
     "reports/drafts/exercise3-answers.md": "539c8f9e75a831efbe34d5524dda53e5f28c1b9decd5345c26480dd30fb83c6d",
     "reports/drafts/exercise3-review-probe.md": "2939d1341d93b4b36187de1d358baeff75387a29eaf21e053e72859e689eb068",
     "reports/drafts/exercise3-review-user-confirmed.md": "2939d1341d93b4b36187de1d358baeff75387a29eaf21e053e72859e689eb068",
-    "README.md": "5c597c07ac075739c3018687e7e4dad70a991fd34083ec7b69b9317b07a88c5c",
+    "README.md": "91faa0ad2c9e8e54c7d3cb7e1bb48c3ad99506bbe76ec7b181ef578090281cae",
     "docs/SETUP.md": "9e247356b62939842bf4795cb167d89e0f169a19676ac237f0eaa3d839edc1c9",
     "reports/REPORT.md": "e65e5bc86103f0645bcaf1fdd0023a43311593f7e0ca414ed40e1ac9f76a7158",
-    "reports/evidence/README.md": "aac021b3e7205cf5716d1f0afa21940ea46bc9396b38896264819043f9a8d963",
+    "reports/evidence/README.md": "d05877157ace3a0b445a1ac3f733a3257892e967aa8fad32f8a899e93013bdbb",
     "tests/test_review_agent.py": "1c56d18da47dd9a2ebebbdafc7015a9b768ecbfd742dfc8d96fff18ce2ee3adb",
     "tests/test_streamlit.py": "459c21705e18617bd2357d2b790895c2b27f5399a26dc303964768499f4fdbd6",
     "screenshots/README.md": "a41c7517fcd6edc0eb329933f1e90abc8d67321859bc0a9f39ef75278f919d9a",
     "scripts/run_evidence.py": "0c08fad5b51b055f2e5aac8cebc7bdb173a02f124062e045fc4952636348e326",
     "scripts/browser_evidence.py": "ee5aac3b46d14fb68df0bf33528ef5b1233a758102f88d80e881ab28c53b0afe",
-    ".github/workflows/checks.yml": "53a1958a0d2db692581d51271a74bc20d9c368a637780a66dac36b29a651ee69"
+    ".github/workflows/checks.yml": "53a1958a0d2db692581d51271a74bc20d9c368a637780a66dac36b29a651ee69",
+    "reports/SUBMISSION.md": "36dd1b3910787cae0ec1d67a295ecc7893e741e863022f230c38655a1d45c11f",
+    "reports/evidence/submission_check.json": "d387ab8a9bd8688ae8384af507c939c2330ec142a3a9d8d1254ce74aea0488a9"
   },
   "historical_execution_source_differences": {
     "live_runs.json": [
@@ -734,5 +736,14 @@
         "artifact_newline_note": "Freshly generated browser/offline JSON normalized to LF before final evidence hashing; source and saved runtime values unchanged."
       }
     }
+  },
+  "subsequent_submission_check": {
+    "timestamp_utc": "2026-10-15T08:08:15.710644+00:00",
+    "report": "reports/evidence/submission_check.json",
+    "source_hashes_unchanged": true,
+    "previous_validation_sha256": "71004278f3e9eb41ee385f93f4146c2d22de2277f02cfccc1ea44175e5574e92",
+    "clean_clone_python": "3.11.15",
+    "full_suite": "47 passed in 54.31s",
+    "public_review_status": "awaiting_user_review_approval"
   }
 }
