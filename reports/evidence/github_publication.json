@@ -1,0 +1,40 @@
+{
+  "verified_at_utc": "2026-10-15T08:20:11.151215+00:00",
+  "authorization": {
+    "source": "explicit user HITL approval in this conversation",
+    "choice": "approve",
+    "text": "Approve — đăng review PR #1"
+  },
+  "exercise": 2,
+  "thread_id": "68d03c86-3254-4c62-847e-22cea4147944",
+  "pr_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/1",
+  "pr_head_sha": "164615656d47c67b0857daf02fcd412c55333d5d",
+  "final_action": "committed",
+  "terminal_result": {
+    "session_id": 37154,
+    "exit_code": 0,
+    "observed_lines": [
+      "posted comment to https://github.com/VinUni-AI20k/PR-Demo/pull/1",
+      "final_action = committed"
+    ]
+  },
+  "comment": {
+    "id": 6187698906,
+    "html_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/1#issuecomment-6187698906",
+    "created_at": "2026-10-15T08:19:06Z",
+    "updated_at": "2026-10-15T08:19:06Z"
+  },
+  "author": "Neon310304",
+  "body_sha256": "4525114b37d2b57ab78d79ebad3e743e4fd795b14e75c0c06547d3d542c2ed23",
+  "marker": "<!-- day27-review:4454977fea68344c9c3d94e4 -->",
+  "approved_draft_matches": true,
+  "resumed_graph_body_matches": true,
+  "matching_comments_found": 1,
+  "verification": {
+    "endpoint": "https://api.github.com/repos/VinUni-AI20k/PR-Demo/issues/1/comments",
+    "http_status": 200,
+    "pages": 5,
+    "anonymous_comment_http_status": 200
+  },
+  "scope": "Only PR #1 was approved and published. PR #2 remains preview-only."
+}

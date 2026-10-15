@@ -28,8 +28,14 @@
   "approval_run": {
     "file": "exercise2_approval.json",
     "confidence": 0.58,
-    "status": "awaiting_actual_user_approval",
-    "github_comment_posted": false
+    "status": "committed",
+    "github_comment_posted": true,
+    "initial_observation": {
+      "timestamp_utc": "2026-10-15T07:08:26.627758+00:00",
+      "status": "awaiting_actual_user_approval",
+      "github_comment_posted": false
+    },
+    "comment_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/1#issuecomment-6187698906"
   },
   "reject_replay": {
     "file": "exercise2_reject.json",
@@ -67,7 +73,7 @@
       "timestamp_utc": "2026-10-15T07:08:42.820712+00:00"
     }
   },
-  "github_comments_posted_during_exercise2": 0,
+  "github_comments_posted_during_exercise2": 1,
   "current_targeted_checks": [
     {
       "command": "uv run pytest -q tests/test_review_agent.py -k exercise2",
@@ -87,5 +93,16 @@
       "stdout": "12 files already formatted",
       "stderr": ""
     }
-  ]
+  ],
+  "subsequent_publication": {
+    "verified_at_utc": "2026-10-15T08:20:11.151215+00:00",
+    "evidence": "github_publication.json",
+    "response_source": "explicit user approval; approve entered into the original paused process",
+    "initial_test_results_and_source_hashes_preserved": true,
+    "new_llm_calls_during_resume": 0,
+    "final_action": "committed",
+    "author": "Neon310304",
+    "matching_comments_found": 1,
+    "comment_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/1#issuecomment-6187698906"
+  }
 }

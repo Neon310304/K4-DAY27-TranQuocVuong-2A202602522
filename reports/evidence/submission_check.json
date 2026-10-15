@@ -137,14 +137,24 @@
   },
   "tracked_private_files": [],
   "public_review_comment": {
-    "checked_prs": [
-      1,
-      2
-    ],
-    "own_comments_found": 0,
-    "status": "awaiting_user_review_approval",
-    "candidate_draft": "reports/drafts/exercise2-review.md",
-    "thread_id": "68d03c86-3254-4c62-847e-22cea4147944"
+    "initial_observation": {
+      "checked_prs": [
+        1,
+        2
+      ],
+      "own_comments_found": 0,
+      "status": "awaiting_user_review_approval",
+      "candidate_draft": "reports/drafts/exercise2-review.md",
+      "thread_id": "68d03c86-3254-4c62-847e-22cea4147944"
+    },
+    "status": "published_after_explicit_user_approval",
+    "verified_at_utc": "2026-10-15T08:20:11.151215+00:00",
+    "author": "Neon310304",
+    "comment_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/1#issuecomment-6187698906",
+    "matching_comments_found": 1,
+    "thread_id": "68d03c86-3254-4c62-847e-22cea4147944",
+    "evidence": "reports/evidence/github_publication.json",
+    "scope": "Subsequent live Exercise 2 resume; clean-clone checks remain offline and unchanged."
   },
   "class_submission": "No Day27 form URL or confirmation supplied; no claim of submitting to class portal."
 }

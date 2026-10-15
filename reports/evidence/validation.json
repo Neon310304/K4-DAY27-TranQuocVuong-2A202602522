@@ -74,8 +74,8 @@
     "reports/evidence/browser_checks.json": "c2134ed47faf1e3d8ef8b592c0e093c6e56f0018b764952024ddb289e8cd01d6",
     "reports/evidence/browser_controls.json": "6739b1e99d6d975f3c40216d34651a9229f80de1674ae8a48424692fe9b43b34",
     "reports/evidence/exercise1_runs.json": "079b2d9ab5a4caed3516e6e629bf1d81498b01749e135c0d4ec9922ab02cba5b",
-    "reports/evidence/exercise2_approval.json": "99f62e100611eb33454c95b26c98ed1906c6aa5f56d4ad7ff41583821ab2fe99",
-    "reports/evidence/exercise2_checks.json": "39549f3e1de4da751963034dd42e686cd9645279bba09649b7ae486773675bb8",
+    "reports/evidence/exercise2_approval.json": "7361cc4cf30ba22515a04f3ade31a6db8b16830ace50935860b3a7c44016a026",
+    "reports/evidence/exercise2_checks.json": "d229e82ad89878565f72093157f2218ea11af7e84534eeedaf8545a86bd4bd00",
     "reports/evidence/exercise2_low_confidence.json": "8ea4fe31d9e7d89add3050ef1804d40a654907534237ec4657ea355e8e0bbff9",
     "reports/evidence/exercise2_reject.json": "fb9f10a2ef698e0f2675344c9affa958095b43e036c5dab0188ea9360524b96f",
     "reports/evidence/exercise2_reject_input_failure.json": "1e93db2a2635bd9c037022acd6a656692f02b01e9f8229503d7693b31df6a6a0",
@@ -92,18 +92,19 @@
     "reports/drafts/exercise3-answers.md": "539c8f9e75a831efbe34d5524dda53e5f28c1b9decd5345c26480dd30fb83c6d",
     "reports/drafts/exercise3-review-probe.md": "2939d1341d93b4b36187de1d358baeff75387a29eaf21e053e72859e689eb068",
     "reports/drafts/exercise3-review-user-confirmed.md": "2939d1341d93b4b36187de1d358baeff75387a29eaf21e053e72859e689eb068",
-    "README.md": "91faa0ad2c9e8e54c7d3cb7e1bb48c3ad99506bbe76ec7b181ef578090281cae",
+    "README.md": "11f987b1267ddb27eb99d42fef312e08e9bbbf527ee4f7a8aeb3906792248528",
     "docs/SETUP.md": "9e247356b62939842bf4795cb167d89e0f169a19676ac237f0eaa3d839edc1c9",
-    "reports/REPORT.md": "e65e5bc86103f0645bcaf1fdd0023a43311593f7e0ca414ed40e1ac9f76a7158",
-    "reports/evidence/README.md": "d05877157ace3a0b445a1ac3f733a3257892e967aa8fad32f8a899e93013bdbb",
+    "reports/REPORT.md": "2759e6b7c00b6dd78ca43a71e96557b756c8293e3777cb327f35f1d4b8ec7de9",
+    "reports/evidence/README.md": "53f0b66d12c08fef6dc0ea8d9554e3f770f624cc4bf242ed13f42de322c5ae95",
     "tests/test_review_agent.py": "1c56d18da47dd9a2ebebbdafc7015a9b768ecbfd742dfc8d96fff18ce2ee3adb",
     "tests/test_streamlit.py": "459c21705e18617bd2357d2b790895c2b27f5399a26dc303964768499f4fdbd6",
     "screenshots/README.md": "a41c7517fcd6edc0eb329933f1e90abc8d67321859bc0a9f39ef75278f919d9a",
     "scripts/run_evidence.py": "0c08fad5b51b055f2e5aac8cebc7bdb173a02f124062e045fc4952636348e326",
     "scripts/browser_evidence.py": "ee5aac3b46d14fb68df0bf33528ef5b1233a758102f88d80e881ab28c53b0afe",
     ".github/workflows/checks.yml": "53a1958a0d2db692581d51271a74bc20d9c368a637780a66dac36b29a651ee69",
-    "reports/SUBMISSION.md": "36dd1b3910787cae0ec1d67a295ecc7893e741e863022f230c38655a1d45c11f",
-    "reports/evidence/submission_check.json": "d387ab8a9bd8688ae8384af507c939c2330ec142a3a9d8d1254ce74aea0488a9"
+    "reports/SUBMISSION.md": "b2d81933748a5b08fb5a8af0173bc72a82f560c4078f69d684fb0b0f5c95e6be",
+    "reports/evidence/submission_check.json": "f587f6fefc3a070a5b9a505797a938f7870f988839661d83057b2e8aa3c3ee5e",
+    "reports/evidence/github_publication.json": "84c25f7b0730f6546b3a7662a8f08763b1fcc23f05326dd1fd2b2a73f7a4bc5a"
   },
   "historical_execution_source_differences": {
     "live_runs.json": [
@@ -745,5 +746,25 @@
     "clean_clone_python": "3.11.15",
     "full_suite": "47 passed in 54.31s",
     "public_review_status": "awaiting_user_review_approval"
+  },
+  "subsequent_publication_check": {
+    "timestamp_utc": "2026-10-15T08:20:11.151215+00:00",
+    "report": "reports/evidence/github_publication.json",
+    "previous_validation_sha256": "53a4d8d430a189ceddb6d37cae48cb9ae059ae3888dfdf222045e1484bcd1a49",
+    "source_hashes_unchanged": true,
+    "scope": "Resume original paused Exercise 2 after explicit user approval; documentation and evidence changes only.",
+    "final_action": "committed",
+    "comment_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/1#issuecomment-6187698906",
+    "author": "Neon310304",
+    "matching_comments_found": 1,
+    "approved_draft_matches": true,
+    "anonymous_comment_http_status": 200,
+    "secret_scan": {
+      "configured_secret_matches": 0,
+      "token_pattern_matches_excluding_original_lab_placeholder": 0,
+      "original_unchanged_lab_placeholders": 1,
+      "env_and_databases_untracked": true
+    },
+    "packaging_checked_at_utc": "2026-10-15T08:22:49.016361+00:00"
   }
 }
