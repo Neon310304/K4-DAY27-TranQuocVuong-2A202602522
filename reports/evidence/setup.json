@@ -1,0 +1,99 @@
+{
+  "timestamp_utc": "2026-10-15T06:49:43.804891+00:00",
+  "scope": "preparation checks after repository rename and fresh local environment; no new LLM calls or GitHub comments",
+  "repository": {
+    "full_name": "Neon310304/K4-DAY27-TranQuocVuong-2A202602522",
+    "public": true,
+    "fork": true,
+    "parent": "VinUni-AI20k/VinUni-AI20k-Day27-Track03-HITL",
+    "origin": "https://github.com/Neon310304/K4-DAY27-TranQuocVuong-2A202602522.git",
+    "anonymous_http_status": 200
+  },
+  "python_version": "3.12.6",
+  "env": {
+    "present": true,
+    "git_ignored": true,
+    "tracked": false,
+    "openrouter_api_key_variable_configured": true,
+    "llm_base_url": "https://api.yescale.io/v1",
+    "llm_model": "gpt-4o-mini",
+    "github_user": "Neon310304",
+    "github_token_variable_configured": false
+  },
+  "github_auth": {
+    "source": "git_credential_manager",
+    "authenticated_login": "Neon310304",
+    "user_http_status": 200,
+    "repository_http_status": 200,
+    "repository_full_name": "VinUni-AI20k/PR-Demo",
+    "reported_scopes": "gist, repo, workflow",
+    "dedicated_classic_public_repo_only_pat_verified": false,
+    "post_permission_exercised": false
+  },
+  "checks": [
+    {
+      "command": "uv sync --locked --group dev",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Resolved 89 packages in 3ms\nChecked 87 packages in 17ms"
+    },
+    {
+      "command": "uv pip check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Checked 87 packages in 24ms\nAll installed packages are compatible"
+    },
+    {
+      "command": "uv run ruff check exercises app.py scripts tests",
+      "exit_code": 0,
+      "stdout": "All checks passed!",
+      "stderr": ""
+    },
+    {
+      "command": "uv run ruff format --check exercises app.py scripts tests",
+      "exit_code": 0,
+      "stdout": "12 files already formatted",
+      "stderr": ""
+    },
+    {
+      "command": "uv run pytest -q",
+      "exit_code": 0,
+      "stdout": "..............................                                           [100%]\n30 passed in 28.12s",
+      "stderr": ""
+    }
+  ],
+  "source_hashes": {
+    "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
+    "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
+    "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+    "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+    "exercises/exercise_2_hitl.py": "87ce133ed85994fec3f6dd598f31e7eb45b66ff2238c56ff427cf210a19f7aae",
+    "exercises/exercise_3_escalation.py": "a55fc4b17cc11f94dd2fa4a5ec1bfbe42b9917b0bb4c99f2eb02d5e5e43d7388",
+    "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+    "exercises/review_support.py": "e1906d7de4b6c6099623a60e13b87a2c4a41b3a3fe02ebe39f497b2bd52e34f7",
+    "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+    "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+    "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+    "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+    "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+    "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d",
+    "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
+  },
+  "restored_checkpoints": [
+    {
+      "thread_id": "ba6e5b8b-4dfb-44b5-bccf-f042eb19d540",
+      "pr_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/1",
+      "decision": "human_approval",
+      "still_pending": true
+    },
+    {
+      "thread_id": "0679cf49-dbd1-40df-9f30-1fe2ef979dff",
+      "pr_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/2",
+      "decision": "escalate",
+      "still_pending": true
+    }
+  ],
+  "llm_requests_added": 0,
+  "github_comments_posted": 0
+}

@@ -4,6 +4,8 @@
 
 **Ngày thực hiện:** 15/10/2026 (Asia/Bangkok)
 
+Repo public đã chuẩn hoá tên thành [K4-DAY27-TranQuocVuong-2A202602522](https://github.com/Neon310304/K4-DAY27-TranQuocVuong-2A202602522). [Setup](../docs/SETUP.md) và [setup.json](evidence/setup.json) ghi kiểm tra môi trường mới cùng khác biệt credential: YesScale qua OpenAI-compatible API, GitHub Credential Manager thay PAT classic `public_repo` riêng.
+
 ## Kết quả
 
 Hoàn thiện năm bài tập, UI Streamlit, routing, HITL, escalation và audit SQLite. Bộ **30 tests offline đạt**. **8 kiểm tra trình duyệt Chrome đạt**, không có page error. Dependencies tương thích theo `uv pip check`.

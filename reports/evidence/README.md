@@ -5,6 +5,7 @@
 - `browser_checks.json`: tám kiểm tra Chrome, gồm tương tác demo, reload SQLite, mở checkpoint của hai lần chạy live và viewport 375px. Không tạo thêm LLM request live.
 - `browser_controls.json`: các nút thực tế được đọc từ DOM khi kiểm tra giao diện.
 - `validation.json`: command/output/exit code của kiểm tra cuối, source hashes hiện tại và hashes của evidence/ảnh. Danh sách khác biệt so với source hashes live được giữ rõ; không thay metadata lịch sử. Đây là kết quả công cụ tự ghi, không phải chứng thực độc lập.
+- `setup.json`: kiểm tra sau khi đổi tên fork/thư mục sang `K4-DAY27...`, cài môi trường mới, xác thực GitHub và mở lại checkpoint. Ghi rõ Credential Manager được dùng thay PAT classic riêng; không chứa token và không gọi thêm LLM hoặc đăng comment.
 
 Các ảnh trong `screenshots/` được chụp ở lần kiểm tra browser sau chỉnh sửa UI; source text sau đó được chuẩn hoá xuống dòng LF. Hash lịch sử có thể khác cả do thay đổi code lẫn xuống dòng. `validation.json` không bao gồm hash của chính nó, tránh tham chiếu vòng.
 

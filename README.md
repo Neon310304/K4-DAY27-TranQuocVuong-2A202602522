@@ -8,6 +8,19 @@ Agent review pull request bằng LangGraph, dừng chờ người duyệt khi c�
 
 ![Review một PR thật qua YesScale](screenshots/07-live-pr1.png)
 
+## Repo cá nhân và chuẩn bị
+
+Fork public: [Neon310304/K4-DAY27-TranQuocVuong-2A202602522](https://github.com/Neon310304/K4-DAY27-TranQuocVuong-2A202602522), từ `VinUni-AI20k/VinUni-AI20k-Day27-Track03-HITL`.
+
+```bash
+git clone https://github.com/Neon310304/K4-DAY27-TranQuocVuong-2A202602522.git
+cd K4-DAY27-TranQuocVuong-2A202602522
+uv sync --locked
+git remote -v
+```
+
+`origin` phải trỏ tới fork cá nhân trên. Hướng dẫn key, token và kiểm tra quyền nằm ở [docs/SETUP.md](docs/SETUP.md); kết quả kiểm tra môi trường riêng trong [setup.json](reports/evidence/setup.json). Không cần Docker hoặc PostgreSQL.
+
 ## Chạy nhanh
 
 Python 3.11+ và [uv](https://docs.astral.sh/uv/). Đã kiểm tra bằng Python 3.12 trên Windows.

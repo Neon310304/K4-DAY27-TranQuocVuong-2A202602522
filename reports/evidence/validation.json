@@ -72,7 +72,11 @@
     "reports/evidence/browser_controls.json": "39c4fe17a9560edc9d922c6b5c43f7accfa357d53b70536f6b457865c989be07",
     "reports/evidence/live_runs.json": "b8aff06b9401989327d1e8b5c14d26d351122a1b1245a7a0c81c48fdcd7d2a06",
     "reports/evidence/offline_runs.json": "1d1e2f2678ded09b0fee6828da2d705ba55dd611f189d63e3d95624e6d723338",
-    "reports/evidence/README.md": "321c4c3154c3350fe02f49617f8c7d4f1bcdf687010a158d89b54c708db84151"
+    "reports/evidence/README.md": "332cb3ee1d10f0d518fddb588f45daf356e4d8324c29a73604c259d982d4f2ee",
+    "reports/evidence/setup.json": "429bc0245989dbf6775ae0d307339626210a699214b33abb8c24da8a063f6e40",
+    "docs/SETUP.md": "8630a25584abe31d76648fd4f0446fe99c8cccdf86de89d2eaf8c16baec17df5",
+    "README.md": "99e19c63e52d2a75f1dad2b7659f2894dd8206888a66f1af69a28ac2bf3da1e3",
+    "reports/REPORT.md": "806e426da28938ab64c2e123ec516b9d14f739be92b2c0215cac6a1b8d9fdecd"
   },
   "historical_live_execution_source_differences": [
     "app.py",
@@ -98,5 +102,12 @@
     "token_pattern_matches_excluding_original_lab_placeholder": 0,
     "env_and_databases_untracked": true
   },
-  "normalization_note": "After offline checks, common/ and audit/ working files were restored to exact original Git blob bytes (CRLF to LF only); offline graph evidence was regenerated. No semantic code changes."
+  "normalization_note": "After offline checks, common/ and audit/ working files were restored to exact original Git blob bytes (CRLF to LF only); offline graph evidence was regenerated. No semantic code changes.",
+  "subsequent_preparation_check": {
+    "timestamp_utc": "2026-10-15T06:50:20.627592+00:00",
+    "report": "reports/evidence/setup.json",
+    "scope": "repository rename, fresh environment, credential checks and documentation; no application source changes",
+    "previous_evidence_index_hash": "321c4c3154c3350fe02f49617f8c7d4f1bcdf687010a158d89b54c708db84151",
+    "source_hashes_unchanged": true
+  }
 }
