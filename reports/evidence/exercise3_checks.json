@@ -104,6 +104,13 @@
       "exit_code": 0,
       "stdout": "",
       "stderr": ""
+    },
+    {
+      "command": "git diff HEAD^ --check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "note": "Includes newly added artifacts; removed an extra final blank line from the proposed answers."
     }
   ]
 }

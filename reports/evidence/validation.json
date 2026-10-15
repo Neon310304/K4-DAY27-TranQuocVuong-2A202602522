@@ -32,6 +32,13 @@
       "exit_code": 0,
       "stdout": "",
       "stderr": ""
+    },
+    {
+      "command": "git diff HEAD^ --check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "note": "Includes newly added artifacts; removed an extra final blank line from the proposed answers."
     }
   ],
   "latest_full_test_suite": {
@@ -76,7 +83,7 @@
     "reports/evidence/exercise2_low_confidence.json": "8ea4fe31d9e7d89add3050ef1804d40a654907534237ec4657ea355e8e0bbff9",
     "reports/evidence/exercise2_reject.json": "fb9f10a2ef698e0f2675344c9affa958095b43e036c5dab0188ea9360524b96f",
     "reports/evidence/exercise2_reject_input_failure.json": "1e93db2a2635bd9c037022acd6a656692f02b01e9f8229503d7693b31df6a6a0",
-    "reports/evidence/exercise3_checks.json": "f11fc06b7845fa643ec182badf7950d02264b39930850cd7ebb8f98970b14e33",
+    "reports/evidence/exercise3_checks.json": "a127b96599e99e1591f528648e5f8999a2c477ae41dbef1be624e03730699eaa",
     "reports/evidence/exercise3_live.json": "a308db379cbaedde457deaa7047c3e7f7a0f04d5eaa321ae60cd4c60a3fbf9b1",
     "reports/evidence/exercise3_offline.json": "dffa360e7e1cff29d61ddc681f4ba7170fb1b7c9fee8ef676fc041ecb5ac44f5",
     "reports/evidence/exercise3_synthesis_probe.json": "aabba37a4abb3c7396b089e049aa83e6eac27c58b1f4ce795b7d261930fbd9d5",
@@ -84,7 +91,7 @@
     "reports/evidence/offline_runs.json": "ea55846c6ea1be36f96dcd8c686460eb8ece6f24dae0dca6837e98f07063f748",
     "reports/evidence/setup.json": "429bc0245989dbf6775ae0d307339626210a699214b33abb8c24da8a063f6e40",
     "reports/drafts/exercise2-review.md": "87d370ada429010a9f3145b39af793fb8c207c8ae591d74f5a4ff9738e1b53de",
-    "reports/drafts/exercise3-answers.md": "fdf92b4f2d30520a52824a7e3c580e74059970cf41e0a32ac0587c95dc74dc14",
+    "reports/drafts/exercise3-answers.md": "fc28e639364f36c00394b0ebeb38d36e4b80efbe0c52d23d8857d431196d64cf",
     "reports/drafts/exercise3-review-probe.md": "2939d1341d93b4b36187de1d358baeff75387a29eaf21e053e72859e689eb068",
     "README.md": "0b67f89324114d73c34a470fd02f3af60785f248341c328944cd604c9a70a576",
     "docs/SETUP.md": "9e247356b62939842bf4795cb167d89e0f169a19676ac237f0eaa3d839edc1c9",

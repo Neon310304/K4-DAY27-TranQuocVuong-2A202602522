@@ -17,4 +17,3 @@ For this review, report a clear not-logged-in message and ask the user to log in
 ## 4. Is there a plan to implement user session management to replace the hard-coded user ID in `_current_user_id`?
 
 The diff only promises session management in a future comment; no implemented session binding or verified project plan is available. Require the user ID to come from an authenticated session with server-side authorization. Also retain the visible interpolated SQL in Storage.add and the HTTP SYNC_URL as unresolved concerns; the answers do not fix the code.
-
