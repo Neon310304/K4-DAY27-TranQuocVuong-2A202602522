@@ -62,6 +62,7 @@ def use_result(result):
 async def run_graph(
     pr_url, thread_id, resume_value=None, *, backend_mode="live", publish_mode="preview"
 ):
+    """Use the Exercise 4 graph/checkpointer lifecycle for both start and resume."""
     return await run_session(
         pr_url, thread_id, resume_value, backend_mode=backend_mode, publish_mode=publish_mode
     )
@@ -133,6 +134,12 @@ def render_escalation_card(payload):
 
 def render_final(result):
     action = result.get("final_action")
+    automatic = (action or "").startswith("auto_")
+    if automatic and result.get("analysis"):
+        analysis = result["analysis"]
+        st.subheader("Automatic review")
+        st.caption(f"Model confidence {analysis.confidence:.0%}")
+        st.write(analysis.summary)
     if action in {"previewed", "auto_previewed"}:
         st.success("Review complete · draft saved")
         st.caption("Preview mode. No comment was posted to GitHub.")
@@ -144,7 +151,8 @@ def render_final(result):
     elif action == "commit_failed":
         st.error("The comment could not be posted. " + result.get("publish_error", ""))
     if result.get("posted_comment_body"):
-        st.markdown(result["posted_comment_body"])
+        with st.expander("Full review", expanded=not automatic):
+            st.markdown(result["posted_comment_body"])
         st.download_button(
             "Download review", result["posted_comment_body"], "pr-review.md", "text/markdown"
         )
@@ -184,16 +192,22 @@ def main():
         st.subheader("Recent sessions")
         for row in asyncio.run(recent_sessions()):
             short = row["thread_id"][:8]
-            risk = {1: "low", 2: "medium", 3: "high"}[row["risk"]]
+            risk = row["worst_risk"]
+            repo, number = row["pr_url"].removeprefix("https://github.com/").rsplit("/pull/", 1)
             if st.button(
-                f"PR #{row['pr_url'].rsplit('/', 1)[-1]} · {risk} · {short}",
+                f"{repo} #{number} · {risk} · {short}",
                 key="load_" + row["thread_id"],
                 use_container_width=True,
-                help=row["pr_url"],
+                help=f"Session {row['thread_id']} · {row['pr_url']}",
             ):
                 use_result(asyncio.run(load_session(row["thread_id"])))
                 st.rerun()
             st.caption(f"{row['events']} events · {row['last_event'][:16]} UTC")
+            if row["thread_id"] == st.session_state.thread_id:
+                with st.expander("Selected session details", expanded=True):
+                    st.code(row["thread_id"], language=None, wrap_lines=True)
+                    st.markdown(f"[{row['pr_url']}]({row['pr_url']})")
+                    st.caption(f"Worst risk: {risk} · Last event: {row['last_event']}")
         if st.button("Start a new session", use_container_width=True):
             st.session_state.thread_id = None
             st.session_state.result = {}
@@ -312,6 +326,10 @@ def main():
                 "application/json",
             )
         st.caption("Session " + str(st.session_state.thread_id))
+        st.code(
+            "uv run python -m audit.replay --thread " + st.session_state.thread_id,
+            language="bash",
+        )
     else:
         st.caption(
             "73%+ automatic · 58–72% approval · below 58% escalation. Confidence is self-reported by the model."

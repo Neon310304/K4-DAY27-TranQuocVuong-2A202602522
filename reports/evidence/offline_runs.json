@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "timestamp_utc": "2026-10-15T07:38:12.233949+00:00",
+  "timestamp_utc": "2026-10-15T07:57:32.666939+00:00",
   "mode": "offline_synthetic",
   "python_version": "3.12.6",
   "llm_model_requested": null,
@@ -8,15 +8,15 @@
   "github_comments_posted": 0,
   "human_decisions": "synthetic test responses",
   "source_hashes": {
-    "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
+    "app.py": "564299d59df7b1caac6ed7253bc485d2284319b86a13b83ef6fb24c4c3eb80e7",
     "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
     "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
     "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
     "exercises/exercise_2_hitl.py": "55495549fe779958cfa556b13dbd422b0fe96d424b8070e81b7f55f4cfa76d04",
     "exercises/exercise_3_escalation.py": "5e1d0ced32f4747f284e8fa237d495fdb779ffdb390eaa619ecd9d9a5aeebf68",
     "exercises/exercise_4_audit.py": "87249e36dbd2cbef90655760cb40a47505e3c14c1b2415b86364612c991cfb0d",
-    "exercises/review_support.py": "f53e6e21d2c85c89ae58dd309488fdbe33cc5949d8967e6a11e12b3fbbd3f239",
-    "exercises/runtime.py": "cbfdee09bdaaf74ccab7618721eced66d2dafafc42f85b67e888ddebbaf4b356",
+    "exercises/review_support.py": "9a9bd723d0f38f39981b0250b6b35826e917034cc6d4959dd3fd47fed8202d53",
+    "exercises/runtime.py": "4e45425ff14f4f1f1db69fe2df9dcb02513a494b4d4184cdd601970bb19ec89b",
     "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
     "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
@@ -29,12 +29,12 @@
   },
   "runs": [
     {
-      "thread_id": "25c6afde-7d81-4ab4-949b-208e8e0a083f",
+      "thread_id": "a86c4fc7-8da0-4476-b1a5-b026f47199a6",
       "pr_url": "https://github.com/demo/shop/pull/1",
       "snapshots": [
         {
           "pr_url": "https://github.com/demo/shop/pull/1",
-          "thread_id": "25c6afde-7d81-4ab4-949b-208e8e0a083f",
+          "thread_id": "a86c4fc7-8da0-4476-b1a5-b026f47199a6",
           "pr_title": "Offline fixture #1",
           "pr_author": "demo-author",
           "pr_diff": "diff --git a/models.py b/models.py\n--- a/models.py\n+++ b/models.py\n@@ -1 +1,2 @@\n class Task:\n+    priority: int = 0\n",
@@ -86,7 +86,7 @@
         },
         {
           "pr_url": "https://github.com/demo/shop/pull/1",
-          "thread_id": "25c6afde-7d81-4ab4-949b-208e8e0a083f",
+          "thread_id": "a86c4fc7-8da0-4476-b1a5-b026f47199a6",
           "pr_title": "Offline fixture #1",
           "pr_author": "demo-author",
           "pr_diff": "diff --git a/models.py b/models.py\n--- a/models.py\n+++ b/models.py\n@@ -1 +1,2 @@\n class Task:\n+    priority: int = 0\n",
@@ -123,8 +123,8 @@
       ],
       "audit_events": [
         {
-          "id": 121,
-          "timestamp": "2026-10-15T07:38:11.691933+00:00",
+          "id": 167,
+          "timestamp": "2026-10-15T07:57:32.181987+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "fetch_pr",
           "confidence": 0.0,
@@ -135,8 +135,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 122,
-          "timestamp": "2026-10-15T07:38:11.707523+00:00",
+          "id": 168,
+          "timestamp": "2026-10-15T07:57:32.198167+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "analyze",
           "confidence": 0.65,
@@ -147,8 +147,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 123,
-          "timestamp": "2026-10-15T07:38:11.723530+00:00",
+          "id": 169,
+          "timestamp": "2026-10-15T07:57:32.210821+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "route",
           "confidence": 0.65,
@@ -159,8 +159,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 124,
-          "timestamp": "2026-10-15T07:38:11.754880+00:00",
+          "id": 170,
+          "timestamp": "2026-10-15T07:57:32.224109+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "human_approval",
           "confidence": 0.65,
@@ -171,8 +171,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 125,
-          "timestamp": "2026-10-15T07:38:11.802392+00:00",
+          "id": 171,
+          "timestamp": "2026-10-15T07:57:32.262009+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "human_approval",
           "confidence": 0.65,
@@ -183,8 +183,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 126,
-          "timestamp": "2026-10-15T07:38:11.818570+00:00",
+          "id": 172,
+          "timestamp": "2026-10-15T07:57:32.277555+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "human_approval",
           "confidence": 0.65,
@@ -195,8 +195,8 @@
           "execution_time_ms": 14
         },
         {
-          "id": 127,
-          "timestamp": "2026-10-15T07:38:11.838276+00:00",
+          "id": 173,
+          "timestamp": "2026-10-15T07:57:32.292672+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "commit",
           "confidence": 0.65,
@@ -209,12 +209,12 @@
       ]
     },
     {
-      "thread_id": "eb56fe4f-0b47-4b04-b165-bac67a6506d3",
+      "thread_id": "ea4b3b1f-c780-48e3-8774-67813f4c960d",
       "pr_url": "https://github.com/demo/shop/pull/2",
       "snapshots": [
         {
           "pr_url": "https://github.com/demo/shop/pull/2",
-          "thread_id": "eb56fe4f-0b47-4b04-b165-bac67a6506d3",
+          "thread_id": "ea4b3b1f-c780-48e3-8774-67813f4c960d",
           "pr_title": "Offline fixture #2",
           "pr_author": "demo-author",
           "pr_diff": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
@@ -273,7 +273,7 @@
         },
         {
           "pr_url": "https://github.com/demo/shop/pull/2",
-          "thread_id": "eb56fe4f-0b47-4b04-b165-bac67a6506d3",
+          "thread_id": "ea4b3b1f-c780-48e3-8774-67813f4c960d",
           "pr_title": "Offline fixture #2",
           "pr_author": "demo-author",
           "pr_diff": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
@@ -336,7 +336,7 @@
         },
         {
           "pr_url": "https://github.com/demo/shop/pull/2",
-          "thread_id": "eb56fe4f-0b47-4b04-b165-bac67a6506d3",
+          "thread_id": "ea4b3b1f-c780-48e3-8774-67813f4c960d",
           "pr_title": "Offline fixture #2",
           "pr_author": "demo-author",
           "pr_diff": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
@@ -382,8 +382,8 @@
       ],
       "audit_events": [
         {
-          "id": 128,
-          "timestamp": "2026-10-15T07:38:11.894420+00:00",
+          "id": 174,
+          "timestamp": "2026-10-15T07:57:32.335996+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "fetch_pr",
           "confidence": 0.0,
@@ -394,8 +394,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 129,
-          "timestamp": "2026-10-15T07:38:11.899157+00:00",
+          "id": 175,
+          "timestamp": "2026-10-15T07:57:32.352029+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "analyze",
           "confidence": 0.42,
@@ -406,8 +406,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 130,
-          "timestamp": "2026-10-15T07:38:11.917016+00:00",
+          "id": 176,
+          "timestamp": "2026-10-15T07:57:32.363071+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "route",
           "confidence": 0.42,
@@ -418,8 +418,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 131,
-          "timestamp": "2026-10-15T07:38:11.941151+00:00",
+          "id": 177,
+          "timestamp": "2026-10-15T07:57:32.375054+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "escalate",
           "confidence": 0.42,
@@ -430,8 +430,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 132,
-          "timestamp": "2026-10-15T07:38:11.984008+00:00",
+          "id": 178,
+          "timestamp": "2026-10-15T07:57:32.405391+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "escalate",
           "confidence": 0.42,
@@ -442,8 +442,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 133,
-          "timestamp": "2026-10-15T07:38:11.996545+00:00",
+          "id": 179,
+          "timestamp": "2026-10-15T07:57:32.418422+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "escalate",
           "confidence": 0.42,
@@ -454,8 +454,8 @@
           "execution_time_ms": 16
         },
         {
-          "id": 134,
-          "timestamp": "2026-10-15T07:38:12.009771+00:00",
+          "id": 180,
+          "timestamp": "2026-10-15T07:57:32.437420+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "synthesize",
           "confidence": 0.55,
@@ -466,8 +466,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 135,
-          "timestamp": "2026-10-15T07:38:12.029603+00:00",
+          "id": 181,
+          "timestamp": "2026-10-15T07:57:32.451609+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "human_approval",
           "confidence": 0.55,
@@ -478,8 +478,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 136,
-          "timestamp": "2026-10-15T07:38:12.069315+00:00",
+          "id": 182,
+          "timestamp": "2026-10-15T07:57:32.487277+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "human_approval",
           "confidence": 0.55,
@@ -490,8 +490,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 137,
-          "timestamp": "2026-10-15T07:38:12.085194+00:00",
+          "id": 183,
+          "timestamp": "2026-10-15T07:57:32.498937+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "human_approval",
           "confidence": 0.55,
@@ -499,11 +499,11 @@
           "reviewer_id": "automated-offline-validation",
           "decision": "approve",
           "reason": "Synthetic fixture approval only",
-          "execution_time_ms": 16
+          "execution_time_ms": 0
         },
         {
-          "id": 138,
-          "timestamp": "2026-10-15T07:38:12.104512+00:00",
+          "id": 184,
+          "timestamp": "2026-10-15T07:57:32.515682+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "commit",
           "confidence": 0.55,
@@ -516,12 +516,12 @@
       ]
     },
     {
-      "thread_id": "db6c1092-b2bc-4e8c-a3b3-5decce483bc2",
+      "thread_id": "44697628-97dc-44e1-abfa-0700c022dbc5",
       "pr_url": "https://github.com/demo/shop/pull/3",
       "snapshots": [
         {
           "pr_url": "https://github.com/demo/shop/pull/3",
-          "thread_id": "db6c1092-b2bc-4e8c-a3b3-5decce483bc2",
+          "thread_id": "44697628-97dc-44e1-abfa-0700c022dbc5",
           "pr_title": "Offline fixture #3",
           "pr_author": "demo-author",
           "pr_diff": "diff --git a/README.md b/README.md\n--- a/README.md\n+++ b/README.md\n@@ -1 +1 @@\n-Instal\n+Install\n",
@@ -548,8 +548,8 @@
       ],
       "audit_events": [
         {
-          "id": 139,
-          "timestamp": "2026-10-15T07:38:12.152214+00:00",
+          "id": 185,
+          "timestamp": "2026-10-15T07:57:32.569470+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "fetch_pr",
           "confidence": 0.0,
@@ -560,8 +560,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 140,
-          "timestamp": "2026-10-15T07:38:12.168769+00:00",
+          "id": 186,
+          "timestamp": "2026-10-15T07:57:32.584794+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "analyze",
           "confidence": 0.94,
@@ -572,8 +572,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 141,
-          "timestamp": "2026-10-15T07:38:12.184322+00:00",
+          "id": 187,
+          "timestamp": "2026-10-15T07:57:32.600063+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "route",
           "confidence": 0.94,
@@ -584,8 +584,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 142,
-          "timestamp": "2026-10-15T07:38:12.184322+00:00",
+          "id": 188,
+          "timestamp": "2026-10-15T07:57:32.613202+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "auto_approve",
           "confidence": 0.94,
@@ -596,8 +596,8 @@
           "execution_time_ms": 0
         },
         {
-          "id": 143,
-          "timestamp": "2026-10-15T07:38:12.200044+00:00",
+          "id": 189,
+          "timestamp": "2026-10-15T07:57:32.634562+00:00",
           "agent_id": "pr-review-agent@v1.0",
           "action": "commit",
           "confidence": 0.94,

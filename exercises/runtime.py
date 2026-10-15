@@ -220,10 +220,13 @@ async def recent_sessions() -> list[dict]:
             SELECT thread_id, pr_url, MIN(timestamp) AS started, MAX(timestamp) AS last_event,
                    MAX(CASE risk_level WHEN 'high' THEN 3 WHEN 'med' THEN 2 ELSE 1 END) AS risk,
                    COUNT(*) AS events
-              FROM audit_events GROUP BY thread_id ORDER BY last_event DESC LIMIT 25
+              FROM audit_events GROUP BY thread_id, pr_url ORDER BY last_event DESC LIMIT 25
         """) as cursor,
     ):
-        return [dict(row) for row in await cursor.fetchall()]
+        return [
+            {**dict(row), "worst_risk": {1: "low", 2: "med", 3: "high"}[row["risk"]]}
+            for row in await cursor.fetchall()
+        ]
 
 
 def new_thread() -> str:

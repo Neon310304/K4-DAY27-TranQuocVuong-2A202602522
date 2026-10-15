@@ -1,14 +1,18 @@
 {
-  "timestamp_utc": "2026-10-15T07:38:43.454312+00:00",
+  "timestamp_utc": "2026-10-15T07:59:31.771059+00:00",
   "checks": [
     "Synthetic schema change pauses for approval",
+    "Pending approval survives browser reload on the same thread",
     "Edit pauses again, approval saves replacement text locally",
     "Reload restores the completed session from its query-string thread ID",
+    "Recent sessions restore the original thread and show PR URL, worst risk and timestamp",
     "Escalation validates answers, synthesizes and waits for final confirmation; reject posts nothing",
     "High-confidence synthetic typo completes automatically in preview mode",
+    "Browser audit downloads match SQLite and CLI replay for all three completed demo sessions",
     "Actual PR #1 live LLM checkpoint restored, no new LLM call and no publication",
     "Actual PR #2 live LLM checkpoint restored, no new LLM call and no publication",
-    "375px viewport with reduced motion has no document horizontal overflow"
+    "375px viewport with reduced motion has no document horizontal overflow",
+    "Landscape viewport has no document horizontal overflow"
   ],
   "page_errors": [],
   "live_comments_posted": 0,

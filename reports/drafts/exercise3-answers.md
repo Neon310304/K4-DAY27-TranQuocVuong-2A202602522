@@ -1,6 +1,6 @@
 # Proposed lab answers for PR-Demo #2
 
-These are agent-drafted review requirements, not verified project policies or actual human answers. Awaiting reviewer input.
+These requirements were drafted by the agent and explicitly adopted by the user for the lab: ?D?ng 4 c?u tr? l?i ?? xu?t cho lab?. They are not verified project policies. The original paused Exercise 3 session resumed with these answers in preview mode; see exercise3_live.json.
 
 ## 1. What is the policy for password hashing in this application? Should we use a stronger algorithm than MD5?
 

@@ -8,7 +8,7 @@ Repo public đã chuẩn hoá tên thành [K4-DAY27-TranQuocVuong-2A202602522](h
 
 ## Kết quả
 
-Hoàn thiện năm bài tập, UI Streamlit, routing, HITL, escalation và audit SQLite. Bộ **43 tests offline đạt**. **8 kiểm tra trình duyệt Chrome đạt**, không có page error. Dependencies tương thích theo `uv pip check`.
+Hoàn thiện năm bài tập, UI Streamlit, routing, HITL, escalation và audit SQLite. Bộ **47 tests offline đạt**. **12 kiểm tra trình duyệt Chrome đạt**, không có page error. Dependencies tương thích theo `uv pip check`.
 
 Các kết quả máy đọc được nằm trong [evidence](evidence/), ảnh nằm trong [screenshots](../screenshots/README.md). Tests dùng LangGraph và SQLite thật cùng backend giả; không được coi là API execution.
 
@@ -41,7 +41,7 @@ Giữ lại cả hai lần thử khác: [pipe lỗi nhập liệu/EOF](evidence/
 
 [Lệnh CLI thật trên PR #2](evidence/exercise3_live.json) lấy bốn file, head `501f95e`, gọi YesScale với model request `gpt-4o-mini` và trả confidence **50% → escalate**. Panel vàng `Escalation conf=50%` hiển thị summary, reasoning và risk factors; model sinh bốn câu hỏi về hash mật khẩu, lưu token, sync khi chưa đăng nhập và thay `_current_user_id` hard-code bằng session. Đây không phải hai câu fallback. Ba câu dùng mô tả vấn đề, câu cuối nêu function cụ thể; chất lượng tham chiếu file còn có thể cải thiện.
 
-Process đang giữ `MemorySaver`, chờ reviewer trả lời [bản đề xuất](drafts/exercise3-answers.md). Phiên đó dùng `--preview` và chưa resume. Không tự gán ý kiến agent thành chính sách của tác giả PR. Analysis bỏ sót SQL nội suy và URL HTTP dù diff thể hiện hai điểm đó; bộ câu trả lời đề xuất giữ các finding này chưa giải quyết.
+Người dùng sau đó chọn **“Dùng 4 câu trả lời đề xuất cho lab”**. Bốn câu trong [bản đề xuất](drafts/exercise3-answers.md) được nhập vào chính process đang chờ `MemorySaver`; process resume và gọi YesScale cho synthesis, kết thúc `previewed_after_escalation`. Confidence vẫn 50%, analysis không đổi; [draft sau xác nhận](drafts/exercise3-review-user-confirmed.md) có Q&A. Không đăng GitHub. Đây là yêu cầu review của lab do người dùng chọn, không tự gán thành chính sách của tác giả PR. Analysis bỏ sót SQL nội suy và URL HTTP dù diff thể hiện hai điểm đó; bộ câu trả lời giữ các finding này chưa giải quyết. JSON giữ nguyên source hashes của process cũ, snapshot đầu và bổ sung provenance của xác nhận.
 
 Một [lần kiểm tra synthesis qua API thật riêng](evidence/exercise3_synthesis_probe.json) phát lại nguyên PR/analysis ban đầu đã lưu, tự nhập bốn câu trả lời thử do agent soạn, rồi gọi YesScale một lần mới trong `node_synthesize`. Kết quả `previewed_after_escalation`, confidence **0.50 → 0.50**, [draft có đủ Q&A](drafts/exercise3-review-probe.md). Các trường analysis trả về giống bản ban đầu: chỉ có Q&A được phần render nối vào comment; không có bằng chứng synthesis cải thiện finding. Đây là giới hạn quan sát được của model trong lần chạy này. Không gọi đây là phản hồi của reviewer thật, không đăng GitHub và chưa đạt checkpoint `committed_after_escalation` thật.
 
@@ -56,6 +56,16 @@ Sau khi dừng process ở prompt (terminal nhận EOFError, exit 1), một proc
 Audit dùng đúng sáu decision của đề. Tên nhánh graph không được ghi thẳng vào cột decision. Failure publication ghi pending, trạng thái lỗi ở reason. Reviewer chỉ lấy từ `GITHUB_USER` khi có phản hồi/decision người; confidence/risk của synthesize lấy analysis mới. Tests thêm kiểm tra ba nhánh, timing monotonic, worker `os._exit(23)` rồi resume trong process mới mà không fetch/analyze lại, và ranking risk trong replay list. **43 tests đạt**; test crash diễn ra sau khi checkpoint pending đã được lưu, không chứng minh an toàn ở mọi thời điểm crash giữa node.
 
 Tiện ích có sẵn `audit/replay.py` trước đây dùng `MAX(risk_level)` theo alphabet. Sửa bằng CASE high=3/med=2/low=1 để phiên high không bị báo med vì có event fetch trung tính. Giữ nguyên `common/` và schema audit. Dữ liệu lịch sử trước lần sửa có thể chứa decision cũ hoặc chỉ một pending; không viết lại chúng để giả định đã chạy source mới.
+
+## Kiểm chứng riêng Exercise 5
+
+`app.py` dùng cùng graph Exercise 4 qua `run_session()`; không tạo một graph khác cho UI. Hàm này mở saver trong cùng event loop, truyền cùng thread khi start/resume và chỉ đọc checkpoint khi mở lại phiên đang chờ hoặc đã hoàn tất. Approval trả dict choice/feedback; escalation trả dict question/answer. Dữ liệu form thiếu không được gửi vào graph. Preview và publication có nhãn riêng, chế độ đã lưu của phiên không bị thay bởi checkbox khi mở lại.
+
+Sidebar bổ sung tên repo để phân biệt các PR cùng số; phiên được chọn hiện full thread, URL PR, worst risk và timestamp. Xếp risk theo số trước khi MAX; `med` do fetch trung tính vẫn là một event thật trong worst risk. Thẻ automatic hiện summary và confidence, có link khi publication thành công. Trang hiển thị lệnh replay đúng thread và cho tải audit JSON.
+
+[exercise5_browser.json](evidence/exercise5_browser.json) ghi ba phiên demo chạy qua Chrome thật: Edit → confirm → draft; escalation → Q&A → refined → reject; automatic → draft. Audit JSON tải từ UI bằng browser được so sánh bằng nhau với các dòng SQLite và có output CLI replay exit 0. Phản hồi do script nhập, reviewer là `automated-browser-validation`; không gán cho sinh viên. Hai checkpoint API thật được mở lại mà không gọi LLM mới. Tổng **12 kiểm tra browser**, không page error; có reload pending/completed, chọn sidebar, 375px/reduced motion và landscape.
+
+Bốn tests mới dùng AppTest, LangGraph và SQLite thật với API adapters giả, đưa cả ba nhánh qua UI đến publication; nhánh escalation chờ xác nhận cuối. Tests kiểm tra không POST trước quyết định, đúng một POST sau approve/auto, rerun không POST thêm; mở lại session ở AppTest mới không fetch/analyze lại. Tổng suite **47 passed in 23.97s**. Các test này không phải bằng chứng đăng bình luận GitHub thật; checkpoint publication công khai vẫn cần quyết định duyệt thực tế.
 
 ## HITL và phiên bền
 

@@ -120,11 +120,22 @@ Exercise 1 đã được chạy riêng bằng hai lệnh trực tiếp trong đ�
 
 Exercise 2 có [checkpoint CLI thật](reports/evidence/exercise2_approval.json) với confidence **58%**, đang chờ người dùng duyệt [review cụ thể](reports/drafts/exercise2-review.md). [Reject replay](reports/evidence/exercise2_reject.json) dùng lại analysis đã lưu, trả `rejected` và không đăng comment; phản hồi đó do script kiểm thử nhập. Checkpoint đăng comment thật vẫn chờ duyệt; xem [phạm vi kiểm chứng](reports/evidence/exercise2_checks.json).
 
-Exercise 3 có [checkpoint CLI thật trên PR #2](reports/evidence/exercise3_live.json): **50% → escalation**, bốn câu hỏi do model sinh, đang chờ reviewer trả lời. [Synthesis qua API thật trong lần kiểm tra riêng](reports/evidence/exercise3_synthesis_probe.json) dùng analysis đã lưu và câu trả lời thử do agent soạn, đạt `previewed_after_escalation`, confidence vẫn **50%**. [Lần chạy offline](reports/evidence/exercise3_offline.json) dùng hoàn toàn fixture. Chưa đăng comment; [câu trả lời đề xuất](reports/drafts/exercise3-answers.md) chưa được coi là phản hồi của reviewer. [Draft kiểm tra](reports/drafts/exercise3-review-probe.md) chứa đủ Q&A nhưng không chứng minh review đã tốt hơn.
+Exercise 3 có [phiên CLI thật trên PR #2](reports/evidence/exercise3_live.json): **50% → escalation**, bốn câu hỏi do model sinh. Người dùng đã chọn dùng [bốn câu trả lời đề xuất](reports/drafts/exercise3-answers.md) làm yêu cầu review của lab; process đang chờ đã resume, gọi synthesis thật và đạt `previewed_after_escalation`. Confidence vẫn **50%**, analysis không đổi; [draft sau xác nhận](reports/drafts/exercise3-review-user-confirmed.md) có thêm Q&A. Đây là yêu cầu của lab được người dùng chọn, chưa phải chính sách dự án đã xác minh. [Probe trước đó](reports/evidence/exercise3_synthesis_probe.json) và [lần chạy offline](reports/evidence/exercise3_offline.json) được giữ riêng. Chưa đăng comment GitHub.
 
 Exercise 4 đã có [phiên PR #1 thật và output replay](reports/evidence/exercise4_live.json): confidence **65%**, dừng process tại approval, mở process mới và resume cùng thread bằng reject kiểm thử. Có **7 event**, trong đó hai dòng `human_approval/pending` do node chạy lại; fetch/analyze chỉ một lần, không đăng comment. Reviewer trong lần thử là `automated-exercise4-validation`, không gán phản hồi tự động cho sinh viên.
 
 Audit chỉ ghi `auto`, `approve`, `reject`, `edit`, `escalate`, `pending`. Node route ghi `auto_approve → auto`, `human_approval → pending`, `escalate → escalate`, còn state vẫn giữ tên nhánh. Fetch chưa có analysis dùng confidence 0/risk med; các bước sau lấy risk từ `risk_level_for()`. `reviewer_id` lấy `GITHUB_USER` ở bước có phản hồi người. Lỗi publication giữ `decision=pending`, chi tiết trạng thái `commit_failed` nằm trong reason. Pending trước interrupt được ghi lại khi resume đúng cơ chế của lab; chỉ đọc checkpoint không thêm event.
+
+## Exercise 5 trên trình duyệt
+
+Chạy `uv run streamlit run app.py`, mở http://localhost:8501. `run_graph()` dùng `run_session()` để mở `AsyncSqliteSaver`, build graph Exercise 4, invoke hoặc `Command(resume=...)` cùng thread. Reload lấy thread từ URL; chọn Recent sessions chỉ đọc checkpoint, không fetch/analyze lại.
+
+- Approval có diff, reasoning, comments và Approve / Reject / Edit. Edit cần nội dung thay thế và xác nhận lần nữa.
+- Escalation làm nổi risk factors, yêu cầu trả lời đủ câu hỏi rồi synthesize và hiện bản refined để xác nhận cuối theo README gốc.
+- Automatic hiển thị confidence và summary ngay trên thẻ kết quả; khi đăng thật có link GitHub. Preview ghi rõ chỉ lưu draft.
+- Recent sessions hiện repo/PR, risk, mã thread rút gọn và thời điểm. Phiên được chọn có đầy đủ thread ID, PR URL, worst risk và last event. Mỗi phiên có lệnh replay, bảng audit và nút tải audit JSON.
+
+[Bằng chứng Exercise 5](reports/evidence/exercise5_browser.json) đối chiếu audit tải từ UI với SQLite và CLI replay cho cả ba nhánh demo. Tests Streamlit kiểm tra đường publication bằng adapter giả: không đăng trước quyết định, đúng một lần sau approve/auto, reload không đăng lại. Hai checkpoint API thật được mở lại để kiểm tra card; không coi kết quả adapter giả hoặc preview là bình luận GitHub thật.
 
 ## Kiểm thử và evidence
 
@@ -135,8 +146,8 @@ uv run ruff format --check exercises app.py scripts tests audit
 uv pip check
 ```
 
-- **43 tests offline đạt**: routing, pause/resume, payload, publication, audit contract, risk ranking, worker chết rồi resume bằng process mới và smoke test Streamlit.
-- **8 kiểm tra Chrome đạt**, gồm reload checkpoint và màn hình 375px với reduced motion; không có JavaScript page errors.
+- **47 tests offline đạt**: routing, pause/resume, payload, publication, audit contract, risk ranking, worker chết rồi resume bằng process mới và điều khiển đủ ba nhánh từ Streamlit.
+- **12 kiểm tra Chrome đạt**, gồm reload pending/completed, chọn phiên cũ, so khớp audit/replay, viewport 375px/reduced motion và landscape; không có JavaScript page errors.
 - **API thật**: PR-Demo #1 đạt confidence **0.65 → human_approval**; PR-Demo #2 đạt **0.50 → escalate**, qua YesScale với model request `gpt-4o-mini`.
 - Hai phiên thật dừng chờ reviewer. **Chưa đăng bình luận GitHub trong lần xác minh này**. Tương tác hoàn tất ở demo là phản hồi kiểm thử tổng hợp.
 

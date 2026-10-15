@@ -1,6 +1,6 @@
 """Shared review prompts, validation and an explicitly offline demonstration backend.
 
-The supplied common/ and audit/ modules remain unchanged.
+The supplied common/ modules and audit schema remain unchanged.
 """
 
 from __future__ import annotations

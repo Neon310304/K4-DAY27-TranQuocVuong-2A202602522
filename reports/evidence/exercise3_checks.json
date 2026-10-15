@@ -112,5 +112,19 @@
       "stderr": "",
       "note": "Includes newly added artifacts; removed an extra final blank line from the proposed answers."
     }
-  ]
+  ],
+  "subsequent_user_confirmed_resume": {
+    "timestamp_utc": "2026-10-15T07:55:02.912095+00:00",
+    "user_reply": "D?ng 4 c?u tr? l?i ?? xu?t cho lab",
+    "report": "reports/evidence/exercise3_live.json",
+    "draft": "reports/drafts/exercise3-review-user-confirmed.md",
+    "publish_mode": "preview",
+    "final_action": "previewed_after_escalation",
+    "initial_confidence": 0.5,
+    "final_confidence": 0.5,
+    "new_synthesis_llm_calls": 1,
+    "analysis_changed": false,
+    "github_comments_posted": 0,
+    "note": "Prior live_status and validation describe the earlier pending capture. The original paused process has now completed with user-adopted lab answers; original execution source hashes remain unchanged."
+  }
 }
