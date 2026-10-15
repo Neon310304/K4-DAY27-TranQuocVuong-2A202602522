@@ -10,19 +10,17 @@ from __future__ import annotations
 
 import argparse
 
-from dotenv import load_dotenv
 from langgraph.graph import END, START, StateGraph
 from rich.console import Console
 
 from common.github import fetch_pr
 from common.llm import get_llm
 from common.schemas import (
-    AUTO_APPROVE_THRESHOLD,
-    ESCALATE_THRESHOLD,
     PRAnalysis,
     ReviewState,
 )
-
+from exercises.review_support import analysis_messages, route_for
+from exercises.runtime import ensure_github_token, load_environment
 
 console = Console()
 
@@ -33,29 +31,24 @@ def node_fetch_pr(state: ReviewState) -> dict:
         pr = fetch_pr(state["pr_url"])
     console.print(f"  [green]✓[/green] {len(pr.files_changed)} files, head {pr.head_sha[:7]}")
     return {
-        "pr_title": pr.title, "pr_diff": pr.diff,
-        "pr_files": pr.files_changed, "pr_head_sha": pr.head_sha,
+        "pr_title": pr.title,
+        "pr_diff": pr.diff,
+        "pr_files": pr.files_changed,
+        "pr_head_sha": pr.head_sha,
     }
 
 
 def node_analyze(state: ReviewState) -> dict:
     console.print("[cyan]→ analyze[/cyan]")
-    # TODO: call the LLM with structured output PRAnalysis.
-    # Hint:  llm = get_llm().with_structured_output(PRAnalysis)
-    #        analysis = llm.invoke([...])
-    #        return {"analysis": analysis}
-    # When implemented, wrap the call in:
-    #        with console.status("[dim]LLM thinking...[/dim]"):
-    #            analysis = llm.invoke([...])
-    raise NotImplementedError("Implement node_analyze")
+    llm = get_llm().with_structured_output(PRAnalysis)
+    with console.status("[dim]LLM thinking...[/dim]"):
+        analysis = llm.invoke(analysis_messages(state))
+    return {"analysis": PRAnalysis.model_validate(analysis)}
 
 
 def node_route(state: ReviewState) -> dict:
     console.print("[cyan]→ route[/cyan]")
-    # TODO: read state["analysis"].confidence and return
-    #       {"decision": "auto_approve" | "human_approval" | "escalate"}
-    # Thresholds provided: AUTO_APPROVE_THRESHOLD (0.85) and ESCALATE_THRESHOLD (0.60).
-    raise NotImplementedError("Implement node_route")
+    return {"decision": route_for(state["analysis"].confidence)}
 
 
 def node_auto_approve(state: ReviewState) -> dict:
@@ -75,19 +68,31 @@ def node_escalate(state: ReviewState) -> dict:
 
 def build_graph():
     g = StateGraph(ReviewState)
-    # TODO: add_node for the 6 nodes above (fetch_pr, analyze, route, auto_approve, human_approval, escalate)
-    # TODO: add_edge from START → fetch_pr → analyze → route
-    # TODO: add_conditional_edges on "route" with mapping
-    #       {"auto_approve": "auto_approve", "human_approval": "human_approval", "escalate": "escalate"}
-    # TODO: add_edge from each terminal node → END
+    for name, fn in [
+        ("fetch_pr", node_fetch_pr),
+        ("analyze", node_analyze),
+        ("route", node_route),
+        ("auto_approve", node_auto_approve),
+        ("human_approval", node_human_approval),
+        ("escalate", node_escalate),
+    ]:
+        g.add_node(name, fn)
+    g.add_edge(START, "fetch_pr")
+    g.add_edge("fetch_pr", "analyze")
+    g.add_edge("analyze", "route")
+    branches = {name: name for name in ("auto_approve", "human_approval", "escalate")}
+    g.add_conditional_edges("route", lambda state: state["decision"], branches)
+    for name in branches:
+        g.add_edge(name, END)
     return g.compile()
 
 
 def main() -> None:
-    load_dotenv()
+    load_environment()
     parser = argparse.ArgumentParser()
     parser.add_argument("--pr", required=True)
     args = parser.parse_args()
+    ensure_github_token()
 
     console.rule("[bold]Exercise 1 — confidence routing[/bold]")
     console.print(f"[dim]PR: {args.pr}[/dim]\n")

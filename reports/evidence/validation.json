@@ -1,0 +1,102 @@
+{
+  "timestamp_utc": "2026-10-15T06:39:01.459811+00:00",
+  "python_version": "3.12.6",
+  "scope": "offline checks on final source; original live executions preserved, no new live LLM calls",
+  "checks": [
+    {
+      "command": "uv run ruff check exercises app.py scripts tests",
+      "exit_code": 0,
+      "stdout": "All checks passed!",
+      "stderr": ""
+    },
+    {
+      "command": "uv run ruff format --check exercises app.py scripts tests",
+      "exit_code": 0,
+      "stdout": "12 files already formatted",
+      "stderr": ""
+    },
+    {
+      "command": "uv run pytest -q",
+      "exit_code": 0,
+      "stdout": "..............................                                           [100%]\n30 passed in 7.58s",
+      "stderr": ""
+    },
+    {
+      "command": "uv pip check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Checked 87 packages in 18ms\nAll installed packages are compatible"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --exit-code -- common audit",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "source_hashes": {
+    "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
+    "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
+    "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+    "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+    "exercises/exercise_2_hitl.py": "87ce133ed85994fec3f6dd598f31e7eb45b66ff2238c56ff427cf210a19f7aae",
+    "exercises/exercise_3_escalation.py": "a55fc4b17cc11f94dd2fa4a5ec1bfbe42b9917b0bb4c99f2eb02d5e5e43d7388",
+    "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+    "exercises/review_support.py": "e1906d7de4b6c6099623a60e13b87a2c4a41b3a3fe02ebe39f497b2bd52e34f7",
+    "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+    "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+    "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+    "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+    "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+    "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d",
+    "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
+  },
+  "evidence_hashes": {
+    "screenshots/01-workspace.png": "36968ce608d9e91c4fffdc48b6b9e9d032d1a4b53f663c90c41ae82bb47cc842",
+    "screenshots/02-approval.png": "962f625067a50e829a2f0aa6590fc1ad2081a0219c39f0e57aca5577fb31e865",
+    "screenshots/03-edited-draft.png": "9efd70795c562bdd7f524d1977537bd3b979bbc6fc3a9f6e32d51e8cb32f225e",
+    "screenshots/04-escalation.png": "f28670a0f33432ebc93c7da610836d2694cc33bbb10430793866ceac42fffd58",
+    "screenshots/05-refined-review.png": "b0da6b23c574e88b5930aeeff7568f29e4b1b52316e5c4751d4627a7c325b294",
+    "screenshots/06-auto-preview.png": "552d7ff9d89ef274c13820ea5fac89eb0170f14125fa4595be4e4e4aff75129e",
+    "screenshots/07-live-pr1.png": "71f1ba124e125e8c69a8b5b51cf44db6318acdc09c354f72de1f73b25ab2724d",
+    "screenshots/08-live-pr2.png": "d8dc5cb522d5a56c16626c0765a3d633dadc99c12a6a9eb2d4ebe724ad4f3a51",
+    "screenshots/09-mobile.png": "201f16c802f99259dc4a294fa69dfbd6c4e9ef447be217c0843e83253a1fb44d",
+    "reports/evidence/browser_checks.json": "7cd0fbc08354c0447997e8c14dcb19a21df2ab25281d24dcc1e442398d7e5f3b",
+    "reports/evidence/browser_controls.json": "39c4fe17a9560edc9d922c6b5c43f7accfa357d53b70536f6b457865c989be07",
+    "reports/evidence/live_runs.json": "b8aff06b9401989327d1e8b5c14d26d351122a1b1245a7a0c81c48fdcd7d2a06",
+    "reports/evidence/offline_runs.json": "1d1e2f2678ded09b0fee6828da2d705ba55dd611f189d63e3d95624e6d723338",
+    "reports/evidence/README.md": "321c4c3154c3350fe02f49617f8c7d4f1bcdf687010a158d89b54c708db84151"
+  },
+  "historical_live_execution_source_differences": [
+    "app.py",
+    "pyproject.toml",
+    "exercises/exercise_1_confidence.py",
+    "exercises/exercise_4_audit.py",
+    "exercises/runtime.py",
+    "common/db.py",
+    "common/github.py",
+    "common/llm.py",
+    "common/schemas.py",
+    "audit/schema.sql"
+  ],
+  "browser_checks": {
+    "passed": 8,
+    "page_errors": 0,
+    "timestamp_utc": "2026-10-15T06:35:04.060470+00:00"
+  },
+  "offline_source_hashes_match": true,
+  "github_comments_posted_during_verification": 0,
+  "secret_scan": {
+    "configured_secret_matches": 0,
+    "token_pattern_matches_excluding_original_lab_placeholder": 0,
+    "env_and_databases_untracked": true
+  },
+  "normalization_note": "After offline checks, common/ and audit/ working files were restored to exact original Git blob bytes (CRLF to LF only); offline graph evidence was regenerated. No semantic code changes."
+}

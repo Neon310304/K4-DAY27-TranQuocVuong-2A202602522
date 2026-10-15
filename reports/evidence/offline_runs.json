@@ -1,0 +1,575 @@
+{
+  "format_version": 1,
+  "timestamp_utc": "2026-10-15T06:38:42.281682+00:00",
+  "mode": "offline_synthetic",
+  "python_version": "3.12.6",
+  "llm_model_requested": null,
+  "llm_base_url": null,
+  "github_comments_posted": 0,
+  "human_decisions": "synthetic test responses",
+  "source_hashes": {
+    "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
+    "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
+    "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+    "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+    "exercises/exercise_2_hitl.py": "87ce133ed85994fec3f6dd598f31e7eb45b66ff2238c56ff427cf210a19f7aae",
+    "exercises/exercise_3_escalation.py": "a55fc4b17cc11f94dd2fa4a5ec1bfbe42b9917b0bb4c99f2eb02d5e5e43d7388",
+    "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+    "exercises/review_support.py": "e1906d7de4b6c6099623a60e13b87a2c4a41b3a3fe02ebe39f497b2bd52e34f7",
+    "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+    "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+    "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+    "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+    "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+    "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d",
+    "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
+  },
+  "runs": [
+    {
+      "thread_id": "51c28f94-12a0-4692-b83a-0c106ff26fcd",
+      "pr_url": "https://github.com/demo/shop/pull/1",
+      "snapshots": [
+        {
+          "pr_url": "https://github.com/demo/shop/pull/1",
+          "thread_id": "51c28f94-12a0-4692-b83a-0c106ff26fcd",
+          "pr_title": "Offline fixture #1",
+          "pr_author": "demo-author",
+          "pr_diff": "diff --git a/models.py b/models.py\n--- a/models.py\n+++ b/models.py\n@@ -1 +1,2 @@\n class Task:\n+    priority: int = 0\n",
+          "pr_files": [
+            "models.py"
+          ],
+          "pr_head_sha": "0000000000000000000000000000000000000001",
+          "analysis": {
+            "summary": "Synthetic demo: adds task priority with a default value.",
+            "risk_factors": [
+              "Existing-row migration"
+            ],
+            "comments": [
+              {
+                "file": "models.py",
+                "line": 2,
+                "severity": "suggestion",
+                "body": "Confirm existing records receive the default priority."
+              }
+            ],
+            "confidence": 0.65,
+            "confidence_reasoning": "A reviewer needs to confirm schema migration for existing tasks.",
+            "escalation_questions": []
+          },
+          "decision": "human_approval",
+          "backend_mode": "demo",
+          "publish_mode": "preview",
+          "interrupt_payload": {
+            "kind": "approval_request",
+            "pr_url": "https://github.com/demo/shop/pull/1",
+            "confidence": 0.65,
+            "confidence_reasoning": "A reviewer needs to confirm schema migration for existing tasks.",
+            "summary": "Synthetic demo: adds task priority with a default value.",
+            "risk_factors": [
+              "Existing-row migration"
+            ],
+            "comments": [
+              {
+                "file": "models.py",
+                "line": 2,
+                "severity": "suggestion",
+                "body": "Confirm existing records receive the default priority."
+              }
+            ],
+            "diff_preview": "diff --git a/models.py b/models.py\n--- a/models.py\n+++ b/models.py\n@@ -1 +1,2 @@\n class Task:\n+    priority: int = 0\n",
+            "refined": false,
+            "edited": false
+          }
+        },
+        {
+          "pr_url": "https://github.com/demo/shop/pull/1",
+          "thread_id": "51c28f94-12a0-4692-b83a-0c106ff26fcd",
+          "pr_title": "Offline fixture #1",
+          "pr_author": "demo-author",
+          "pr_diff": "diff --git a/models.py b/models.py\n--- a/models.py\n+++ b/models.py\n@@ -1 +1,2 @@\n class Task:\n+    priority: int = 0\n",
+          "pr_files": [
+            "models.py"
+          ],
+          "pr_head_sha": "0000000000000000000000000000000000000001",
+          "analysis": {
+            "summary": "Synthetic demo: adds task priority with a default value.",
+            "risk_factors": [
+              "Existing-row migration"
+            ],
+            "comments": [
+              {
+                "file": "models.py",
+                "line": 2,
+                "severity": "suggestion",
+                "body": "Confirm existing records receive the default priority."
+              }
+            ],
+            "confidence": 0.65,
+            "confidence_reasoning": "A reviewer needs to confirm schema migration for existing tasks.",
+            "escalation_questions": []
+          },
+          "decision": "human_approval",
+          "human_choice": "approve",
+          "human_feedback": "Synthetic fixture approval only",
+          "posted_comment_body": "### PR review (confidence 65%)\n\nSynthetic demo: adds task priority with a default value.\n\n- **[suggestion]** `models.py:2` — Confirm existing records receive the default priority.\n\n**Risks:**\n- Existing-row migration\n\nReviewer note: Synthetic fixture approval only",
+          "final_action": "previewed",
+          "backend_mode": "demo",
+          "publish_mode": "preview",
+          "comment_url": null
+        }
+      ],
+      "audit_events": [
+        {
+          "id": 41,
+          "timestamp": "2026-10-15T06:38:41.543626+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "fetch_pr",
+          "confidence": 0.0,
+          "risk_level": "med",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "Fetched 1 files; head=0000000000000000000000000000000000000001",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 42,
+          "timestamp": "2026-10-15T06:38:41.558297+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "analyze",
+          "confidence": 0.65,
+          "risk_level": "med",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "A reviewer needs to confirm schema migration for existing tasks.",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 43,
+          "timestamp": "2026-10-15T06:38:41.574116+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "route",
+          "confidence": 0.65,
+          "risk_level": "med",
+          "reviewer_id": null,
+          "decision": "human_approval",
+          "reason": "A reviewer needs to confirm schema migration for existing tasks.",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 44,
+          "timestamp": "2026-10-15T06:38:41.600833+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "human_approval",
+          "confidence": 0.65,
+          "risk_level": "med",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "Awaiting final review decision; round=0",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 45,
+          "timestamp": "2026-10-15T06:38:41.655264+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "human_approval",
+          "confidence": 0.65,
+          "risk_level": "med",
+          "reviewer_id": "automated-offline-validation",
+          "decision": "approve",
+          "reason": "Synthetic fixture approval only",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 46,
+          "timestamp": "2026-10-15T06:38:41.672424+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "commit",
+          "confidence": 0.65,
+          "risk_level": "med",
+          "reviewer_id": "automated-offline-validation",
+          "decision": "approve",
+          "reason": "previewed; final decision processed",
+          "execution_time_ms": 0
+        }
+      ]
+    },
+    {
+      "thread_id": "2ca4cc6b-2236-4f2f-b938-c2540f0a341e",
+      "pr_url": "https://github.com/demo/shop/pull/2",
+      "snapshots": [
+        {
+          "pr_url": "https://github.com/demo/shop/pull/2",
+          "thread_id": "2ca4cc6b-2236-4f2f-b938-c2540f0a341e",
+          "pr_title": "Offline fixture #2",
+          "pr_author": "demo-author",
+          "pr_diff": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
+          "pr_files": [
+            "auth.py"
+          ],
+          "pr_head_sha": "0000000000000000000000000000000000000002",
+          "analysis": {
+            "summary": "Synthetic demo: login uses MD5 and interpolated SQL; block until fixed.",
+            "risk_factors": [
+              "Weak password hashing",
+              "SQL injection"
+            ],
+            "comments": [
+              {
+                "file": "auth.py",
+                "line": 1,
+                "severity": "blocker",
+                "body": "Use a password KDF such as Argon2id and parameterized SQL."
+              }
+            ],
+            "confidence": 0.42,
+            "confidence_reasoning": "Missing authentication threat model and unsafe SQL prevent a safe automatic review.",
+            "escalation_questions": [
+              "auth.py: what password hashing and migration policy is required?",
+              "auth.py: how are user-supplied SQL values parameterized and tested?"
+            ]
+          },
+          "decision": "escalate",
+          "backend_mode": "demo",
+          "publish_mode": "preview",
+          "interrupt_payload": {
+            "kind": "escalation",
+            "pr_url": "https://github.com/demo/shop/pull/2",
+            "confidence": 0.42,
+            "confidence_reasoning": "Missing authentication threat model and unsafe SQL prevent a safe automatic review.",
+            "summary": "Synthetic demo: login uses MD5 and interpolated SQL; block until fixed.",
+            "risk_factors": [
+              "Weak password hashing",
+              "SQL injection"
+            ],
+            "comments": [
+              {
+                "file": "auth.py",
+                "line": 1,
+                "severity": "blocker",
+                "body": "Use a password KDF such as Argon2id and parameterized SQL."
+              }
+            ],
+            "diff_preview": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
+            "questions": [
+              "auth.py: what password hashing and migration policy is required?",
+              "auth.py: how are user-supplied SQL values parameterized and tested?"
+            ]
+          }
+        },
+        {
+          "pr_url": "https://github.com/demo/shop/pull/2",
+          "thread_id": "2ca4cc6b-2236-4f2f-b938-c2540f0a341e",
+          "pr_title": "Offline fixture #2",
+          "pr_author": "demo-author",
+          "pr_diff": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
+          "pr_files": [
+            "auth.py"
+          ],
+          "pr_head_sha": "0000000000000000000000000000000000000002",
+          "analysis": {
+            "summary": "Synthetic demo: login uses MD5 and interpolated SQL; block until fixed.",
+            "risk_factors": [
+              "Weak password hashing",
+              "SQL injection"
+            ],
+            "comments": [
+              {
+                "file": "auth.py",
+                "line": 1,
+                "severity": "blocker",
+                "body": "Use a password KDF such as Argon2id and parameterized SQL."
+              }
+            ],
+            "confidence": 0.55,
+            "confidence_reasoning": "Reviewer context does not fix the insecure implementation.",
+            "escalation_questions": [
+              "auth.py: what password hashing and migration policy is required?",
+              "auth.py: how are user-supplied SQL values parameterized and tested?"
+            ]
+          },
+          "decision": "escalate",
+          "human_choice": null,
+          "escalation_answers": {
+            "auth.py: what password hashing and migration policy is required?": "Synthetic validation: require secure defaults and regression tests.",
+            "auth.py: how are user-supplied SQL values parameterized and tested?": "Synthetic validation: require secure defaults and regression tests."
+          },
+          "backend_mode": "demo",
+          "publish_mode": "preview",
+          "synthesized": true,
+          "interrupt_payload": {
+            "kind": "approval_request",
+            "pr_url": "https://github.com/demo/shop/pull/2",
+            "confidence": 0.55,
+            "confidence_reasoning": "Reviewer context does not fix the insecure implementation.",
+            "summary": "Synthetic demo: login uses MD5 and interpolated SQL; block until fixed.",
+            "risk_factors": [
+              "Weak password hashing",
+              "SQL injection"
+            ],
+            "comments": [
+              {
+                "file": "auth.py",
+                "line": 1,
+                "severity": "blocker",
+                "body": "Use a password KDF such as Argon2id and parameterized SQL."
+              }
+            ],
+            "diff_preview": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
+            "refined": true,
+            "edited": false
+          }
+        },
+        {
+          "pr_url": "https://github.com/demo/shop/pull/2",
+          "thread_id": "2ca4cc6b-2236-4f2f-b938-c2540f0a341e",
+          "pr_title": "Offline fixture #2",
+          "pr_author": "demo-author",
+          "pr_diff": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
+          "pr_files": [
+            "auth.py"
+          ],
+          "pr_head_sha": "0000000000000000000000000000000000000002",
+          "analysis": {
+            "summary": "Synthetic demo: login uses MD5 and interpolated SQL; block until fixed.",
+            "risk_factors": [
+              "Weak password hashing",
+              "SQL injection"
+            ],
+            "comments": [
+              {
+                "file": "auth.py",
+                "line": 1,
+                "severity": "blocker",
+                "body": "Use a password KDF such as Argon2id and parameterized SQL."
+              }
+            ],
+            "confidence": 0.55,
+            "confidence_reasoning": "Reviewer context does not fix the insecure implementation.",
+            "escalation_questions": [
+              "auth.py: what password hashing and migration policy is required?",
+              "auth.py: how are user-supplied SQL values parameterized and tested?"
+            ]
+          },
+          "decision": "escalate",
+          "human_choice": "approve",
+          "human_feedback": "Synthetic fixture approval only",
+          "escalation_answers": {
+            "auth.py: what password hashing and migration policy is required?": "Synthetic validation: require secure defaults and regression tests.",
+            "auth.py: how are user-supplied SQL values parameterized and tested?": "Synthetic validation: require secure defaults and regression tests."
+          },
+          "posted_comment_body": "### PR review (confidence 55%)\n\nSynthetic demo: login uses MD5 and interpolated SQL; block until fixed.\n\n- **[blocker]** `auth.py:1` — Use a password KDF such as Argon2id and parameterized SQL.\n\n**Risks:**\n- Weak password hashing\n- SQL injection\n\nReviewer note: Synthetic fixture approval only\n\n**Reviewer context (not evidence of a code change):**\n- auth.py: what password hashing and migration policy is required?\n  Synthetic validation: require secure defaults and regression tests.\n- auth.py: how are user-supplied SQL values parameterized and tested?\n  Synthetic validation: require secure defaults and regression tests.",
+          "final_action": "previewed",
+          "backend_mode": "demo",
+          "publish_mode": "preview",
+          "comment_url": null,
+          "synthesized": true
+        }
+      ],
+      "audit_events": [
+        {
+          "id": 47,
+          "timestamp": "2026-10-15T06:38:41.720000+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "fetch_pr",
+          "confidence": 0.0,
+          "risk_level": "med",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "Fetched 1 files; head=0000000000000000000000000000000000000002",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 48,
+          "timestamp": "2026-10-15T06:38:41.733890+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "analyze",
+          "confidence": 0.42,
+          "risk_level": "high",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "Missing authentication threat model and unsafe SQL prevent a safe automatic review.",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 49,
+          "timestamp": "2026-10-15T06:38:41.764280+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "route",
+          "confidence": 0.42,
+          "risk_level": "high",
+          "reviewer_id": null,
+          "decision": "escalate",
+          "reason": "Missing authentication threat model and unsafe SQL prevent a safe automatic review.",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 50,
+          "timestamp": "2026-10-15T06:38:41.781492+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "escalate",
+          "confidence": 0.42,
+          "risk_level": "high",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "Awaiting reviewer context: [\"auth.py: what password hashing and migration policy is required?\", \"auth.py: how are user-supplied SQL values parameterized and tested?\"]",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 51,
+          "timestamp": "2026-10-15T06:38:41.907575+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "escalate",
+          "confidence": 0.42,
+          "risk_level": "high",
+          "reviewer_id": "automated-offline-validation",
+          "decision": "escalate",
+          "reason": "{\"auth.py: what password hashing and migration policy is required?\": \"Synthetic validation: require secure defaults and regression tests.\", \"auth.py: how are user-supplied SQL values parameterized and tested?\": \"Synthetic validation: require secure defaults and regression tests.\"}",
+          "execution_time_ms": 31
+        },
+        {
+          "id": 52,
+          "timestamp": "2026-10-15T06:38:41.926027+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "synthesize",
+          "confidence": 0.55,
+          "risk_level": "high",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "Reviewer context does not fix the insecure implementation.",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 53,
+          "timestamp": "2026-10-15T06:38:41.953477+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "human_approval",
+          "confidence": 0.55,
+          "risk_level": "high",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "Awaiting final review decision; round=0",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 54,
+          "timestamp": "2026-10-15T06:38:42.032998+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "human_approval",
+          "confidence": 0.55,
+          "risk_level": "high",
+          "reviewer_id": "automated-offline-validation",
+          "decision": "approve",
+          "reason": "Synthetic fixture approval only",
+          "execution_time_ms": 15
+        },
+        {
+          "id": 55,
+          "timestamp": "2026-10-15T06:38:42.056243+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "commit",
+          "confidence": 0.55,
+          "risk_level": "high",
+          "reviewer_id": "automated-offline-validation",
+          "decision": "approve",
+          "reason": "previewed; final decision processed",
+          "execution_time_ms": 0
+        }
+      ]
+    },
+    {
+      "thread_id": "8d745ed2-07a6-457e-94e7-a203c50e0494",
+      "pr_url": "https://github.com/demo/shop/pull/3",
+      "snapshots": [
+        {
+          "pr_url": "https://github.com/demo/shop/pull/3",
+          "thread_id": "8d745ed2-07a6-457e-94e7-a203c50e0494",
+          "pr_title": "Offline fixture #3",
+          "pr_author": "demo-author",
+          "pr_diff": "diff --git a/README.md b/README.md\n--- a/README.md\n+++ b/README.md\n@@ -1 +1 @@\n-Instal\n+Install\n",
+          "pr_files": [
+            "README.md"
+          ],
+          "pr_head_sha": "0000000000000000000000000000000000000003",
+          "analysis": {
+            "summary": "Synthetic demo: corrects a documentation typo.",
+            "risk_factors": [],
+            "comments": [],
+            "confidence": 0.94,
+            "confidence_reasoning": "The supplied diff only fixes spelling; no runtime behavior changes.",
+            "escalation_questions": []
+          },
+          "decision": "auto_approve",
+          "human_choice": null,
+          "posted_comment_body": "### PR review (confidence 94%)\n\nSynthetic demo: corrects a documentation typo.\n",
+          "final_action": "auto_previewed",
+          "backend_mode": "demo",
+          "publish_mode": "preview",
+          "comment_url": null
+        }
+      ],
+      "audit_events": [
+        {
+          "id": 56,
+          "timestamp": "2026-10-15T06:38:42.127170+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "fetch_pr",
+          "confidence": 0.0,
+          "risk_level": "med",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "Fetched 1 files; head=0000000000000000000000000000000000000003",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 57,
+          "timestamp": "2026-10-15T06:38:42.145972+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "analyze",
+          "confidence": 0.94,
+          "risk_level": "low",
+          "reviewer_id": null,
+          "decision": "pending",
+          "reason": "The supplied diff only fixes spelling; no runtime behavior changes.",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 58,
+          "timestamp": "2026-10-15T06:38:42.174925+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "route",
+          "confidence": 0.94,
+          "risk_level": "low",
+          "reviewer_id": null,
+          "decision": "auto_approve",
+          "reason": "The supplied diff only fixes spelling; no runtime behavior changes.",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 59,
+          "timestamp": "2026-10-15T06:38:42.205246+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "auto_approve",
+          "confidence": 0.94,
+          "risk_level": "low",
+          "reviewer_id": null,
+          "decision": "auto",
+          "reason": "Confidence meets the automatic routing threshold",
+          "execution_time_ms": 0
+        },
+        {
+          "id": 60,
+          "timestamp": "2026-10-15T06:38:42.235523+00:00",
+          "agent_id": "pr-review-agent@v1.0",
+          "action": "commit",
+          "confidence": 0.94,
+          "risk_level": "low",
+          "reviewer_id": null,
+          "decision": "auto",
+          "reason": "auto_previewed; final decision processed",
+          "execution_time_ms": 0
+        }
+      ]
+    }
+  ]
+}

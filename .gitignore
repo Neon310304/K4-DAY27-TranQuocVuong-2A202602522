@@ -27,3 +27,12 @@ Thumbs.db
 *.sqlite
 *.db
 scratch/
+*.db-wal
+*.db-shm
+*.db-journal
+.pytest_cache/
+.ruff_cache/
+playwright-report/
+test-results/
+.env.*
+!.env.example

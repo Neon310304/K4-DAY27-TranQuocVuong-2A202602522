@@ -1,0 +1,16 @@
+{
+  "timestamp_utc": "2026-10-15T06:35:04.060470+00:00",
+  "checks": [
+    "Synthetic schema change pauses for approval",
+    "Edit pauses again, approval saves replacement text locally",
+    "Reload restores the completed session from its query-string thread ID",
+    "Escalation validates answers, synthesizes and waits for final confirmation; reject posts nothing",
+    "High-confidence synthetic typo completes automatically in preview mode",
+    "Actual PR #1 live LLM checkpoint restored, no new LLM call and no publication",
+    "Actual PR #2 live LLM checkpoint restored, no new LLM call and no publication",
+    "375px viewport with reduced motion has no document horizontal overflow"
+  ],
+  "page_errors": [],
+  "live_comments_posted": 0,
+  "scope": "real headless Chrome screenshots; synthetic interactions and restored real API sessions are labeled separately"
+}
