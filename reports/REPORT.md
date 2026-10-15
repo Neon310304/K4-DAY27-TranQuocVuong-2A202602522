@@ -8,7 +8,7 @@ Repo public đã chuẩn hoá tên thành [K4-DAY27-TranQuocVuong-2A202602522](h
 
 ## Kết quả
 
-Hoàn thiện năm bài tập, UI Streamlit, routing, HITL, escalation và audit SQLite. Bộ **39 tests offline đạt**. **8 kiểm tra trình duyệt Chrome đạt**, không có page error. Dependencies tương thích theo `uv pip check`.
+Hoàn thiện năm bài tập, UI Streamlit, routing, HITL, escalation và audit SQLite. Bộ **43 tests offline đạt**. **8 kiểm tra trình duyệt Chrome đạt**, không có page error. Dependencies tương thích theo `uv pip check`.
 
 Các kết quả máy đọc được nằm trong [evidence](evidence/), ảnh nằm trong [screenshots](../screenshots/README.md). Tests dùng LangGraph và SQLite thật cùng backend giả; không được coi là API execution.
 
@@ -47,6 +47,16 @@ Một [lần kiểm tra synthesis qua API thật riêng](evidence/exercise3_synt
 
 [Lần chạy offline riêng](evidence/exercise3_offline.json) dùng fixture và hai câu trả lời tổng hợp: interrupt → resume cùng thread → synthesis → `previewed_after_escalation`, confidence 0.42 → 0.55. Synthesis không bị buộc vượt ngưỡng. Tests dùng publication giả để xác minh `committed_after_escalation`, không có POST trước Q&A, đủ dữ liệu mới tiếp tục, và nhánh confidence trung bình vẫn chỉ đăng khi approve. Tổng bộ tests: **39 passed**; không gọi các kết quả giả lập này là xác nhận đăng comment thật.
 
+## Kiểm chứng riêng Exercise 4
+
+[exercise4_live.json](evidence/exercise4_live.json) lưu phiên CLI thật trên PR #1: confidence **0.65**, thread `df03bd5b-68f5-4881-8e10-14f6793c9d18`. Database riêng `exercise4_evidence.db` chứa cả bảng `audit_events` và các bảng checkpoint `checkpoints`, `writes`. File DB chỉ lưu trên máy, không commit. Trước khi dừng worker có bốn event: fetch_pr, analyze, route, human_approval/pending.
+
+Sau khi dừng process ở prompt (terminal nhận EOFError, exit 1), một process Python mới chạy CLI với `--thread` và cùng database, nhập reject kiểm thử. Kết quả `rejected`, **7 event**; fetch và analyze vẫn mỗi loại một event. Hai dòng pending của human_approval đều giữ reviewer NULL; dòng reject sau resume có reviewer `automated-exercise4-validation`. Đây là attribution cho phản hồi do script nhập, không phải lời sinh viên duyệt PR. `audit.replay --thread` và `--list` đều exit 0; output được giữ nguyên trong JSON. Query `risk_level='high' AND decision='auto'` trả **0** trên database thử.
+
+Audit dùng đúng sáu decision của đề. Tên nhánh graph không được ghi thẳng vào cột decision. Failure publication ghi pending, trạng thái lỗi ở reason. Reviewer chỉ lấy từ `GITHUB_USER` khi có phản hồi/decision người; confidence/risk của synthesize lấy analysis mới. Tests thêm kiểm tra ba nhánh, timing monotonic, worker `os._exit(23)` rồi resume trong process mới mà không fetch/analyze lại, và ranking risk trong replay list. **43 tests đạt**; test crash diễn ra sau khi checkpoint pending đã được lưu, không chứng minh an toàn ở mọi thời điểm crash giữa node.
+
+Tiện ích có sẵn `audit/replay.py` trước đây dùng `MAX(risk_level)` theo alphabet. Sửa bằng CASE high=3/med=2/low=1 để phiên high không bị báo med vì có event fetch trung tính. Giữ nguyên `common/` và schema audit. Dữ liệu lịch sử trước lần sửa có thể chứa decision cũ hoặc chỉ một pending; không viết lại chúng để giả định đã chạy source mới.
+
 ## HITL và phiên bền
 
 `interrupt()` trả payload chứa diff, summary, reasoning, comments hoặc câu hỏi. Resume dùng đúng thread với `Command(resume=...)`. `AsyncSqliteSaver` được mở/đóng trong cùng event loop cho từng thao tác; mở thread đã có chỉ đọc checkpoint hoặc tiếp tục chỗ đang dừng, không gửi input khởi tạo lần nữa.
@@ -57,7 +67,7 @@ Exercise 3 nối `escalate → synthesize → commit` theo đề; không hỏi a
 
 Exercise 4–5 mở rộng Edit: yêu cầu nội dung mới, lưu thành draft rồi xác nhận. Reject không gọi publication adapter. Escalation lấy Q&A làm ngữ cảnh, giữ nguyên finding chưa giải quyết, rồi yêu cầu final confirm. Confidence sau synthesize có thể thấp hơn; code không tăng điểm giả.
 
-Audit ghi fetch, analyze, route, automatic decision, pending HITL, reviewer response, synthesize/edit và commit/reject/failure. `reviewer_id` chỉ có ở sự kiện reviewer; nó là attribution cấu hình, không phải identity được xác thực. Thời gian `execution_time_ms` đo bằng monotonic cho lần chạy node, không đại diện tổng thời gian người duyệt chờ. Pending event được kiểm tra để không lặp khi node interrupt chạy lại trong luồng tuần tự.
+Audit ghi fetch, analyze, route, automatic decision, pending HITL, reviewer response, synthesize/edit và commit/reject/failure. `reviewer_id` chỉ có ở sự kiện reviewer; nó là attribution cấu hình, không phải identity được xác thực. Thời gian `execution_time_ms` đo bằng monotonic cho lần chạy node, không đại diện tổng thời gian người duyệt chờ. Pending event trước interrupt được ghi lại khi node chạy lại lúc resume theo yêu cầu Exercise 4; đọc checkpoint không tạo thêm event.
 
 ## Kiểm chứng offline và UI
 
@@ -65,7 +75,7 @@ Audit ghi fetch, analyze, route, automatic decision, pending HITL, reviewer resp
 - Đóng/mở saver và graph mới vẫn khôi phục payload; không fetch/analyze thêm khi reload.
 - Edit hiển thị đúng nội dung đã sửa, bắt xác nhận; reject không gửi comment.
 - Escalation từ chối câu trả lời trống/thiếu. Exercise 3 tự commit sau synthesize theo contract; Exercise 4–5 yêu cầu final confirm.
-- Stub publication xác minh POST đúng một lần khi resume bình thường; lỗi publication được log `failed`, không hiện success và không ghi nguyên exception có thể chứa secrets.
+- Stub publication xác minh POST đúng một lần khi resume bình thường; lỗi publication ghi decision pending và reason có `commit_failed`, không hiện success và không ghi nguyên exception có thể chứa secrets.
 - Chrome thử approval, edit/confirm, escalation/validation/refine/reject, automatic preview, reload, hai live checkpoints và viewport 375px/reduced motion.
 
 Demo dùng fixture rõ ràng; các câu trả lời trong `offline_runs.json` là **phản hồi kiểm thử tự động**, không phải lời người dùng phê duyệt PR thật. Ảnh `07`/`08` là phiên live; các ảnh luồng hoàn tất dùng demo có nhãn.
@@ -73,7 +83,7 @@ Demo dùng fixture rõ ràng; các câu trả lời trong `offline_runs.json` l�
 ## Khác biệt có chủ ý so với starter
 
 1. Ngưỡng dùng hằng số 0.73/0.58, sửa sự lệch giữa TODO cũ và README.
-2. Dùng SQLite theo starter, chưa làm PostgreSQL; giữ `common/` và `audit/` nguyên bản.
+2. Dùng SQLite theo starter, chưa làm PostgreSQL; giữ `common/` và schema nguyên bản, sửa riêng risk aggregation trong tiện ích replay.
 3. Thêm xác nhận cuối sau synthesis trong Exercise 4–5, đúng yêu cầu UI Exercise 5; Exercise 3 giữ đường thẳng từ synthesis tới commit.
 4. UI và CLI Exercise 4 mặc định preview; publication cần checkbox hoặc `--publish`. CLI Exercise 2/3 mặc định live theo checkpoint của đề, có `--preview` để thử cục bộ. Không gán draft thành kết quả đã đăng.
 5. Hỗ trợ YesScale qua tên biến OpenAI-compatible mà không sửa LLM factory được cấp.

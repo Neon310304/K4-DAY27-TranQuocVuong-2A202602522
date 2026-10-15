@@ -28,6 +28,7 @@ def source_hashes():
         ROOT / "pyproject.toml",
         *sorted((ROOT / "exercises").glob("*.py")),
         *sorted((ROOT / "common").glob("*.py")),
+        *sorted((ROOT / "audit").glob("*.py")),
         ROOT / "audit/schema.sql",
     ]
     return {

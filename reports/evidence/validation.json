@@ -1,25 +1,25 @@
 {
-  "timestamp_utc": "2026-10-15T07:26:22.967423+00:00",
+  "timestamp_utc": "2026-10-15T07:41:51.162892+00:00",
   "python_version": "3.12.6",
-  "scope": "Exercise 3 final checks, actual initial analysis, actual synthesis with synthetic answer context, offline fixtures and browser regression; public publication remains pending.",
+  "scope": "Exercise 4 audit contract, real SQLite CLI restart/replay, offline graph executions and browser regression; no public comment publication.",
   "checks": [
     {
-      "command": "uv run ruff check exercises app.py scripts tests",
+      "command": "uv run ruff check exercises app.py scripts tests audit",
       "exit_code": 0,
       "stdout": "All checks passed!",
       "stderr": ""
     },
     {
-      "command": "uv run ruff format --check exercises app.py scripts tests",
+      "command": "uv run ruff format --check exercises app.py scripts tests audit",
       "exit_code": 0,
-      "stdout": "12 files already formatted",
+      "stdout": "14 files already formatted",
       "stderr": ""
     },
     {
       "command": "uv pip check",
       "exit_code": 0,
       "stdout": "",
-      "stderr": "Checked 87 packages in 16ms\nAll installed packages are compatible"
+      "stderr": "Checked 87 packages in 15ms\nAll installed packages are compatible"
     },
     {
       "command": "git diff --check",
@@ -28,24 +28,17 @@
       "stderr": ""
     },
     {
-      "command": "git diff --exit-code -- common audit",
+      "command": "git diff --exit-code -- common audit/schema.sql",
       "exit_code": 0,
       "stdout": "",
       "stderr": ""
-    },
-    {
-      "command": "git diff HEAD^ --check",
-      "exit_code": 0,
-      "stdout": "",
-      "stderr": "",
-      "note": "Includes newly added artifacts; removed an extra final blank line from the proposed answers."
     }
   ],
   "latest_full_test_suite": {
     "command": "uv run pytest -q",
     "exit_code": 0,
-    "stdout": "39 passed in 9.99s",
-    "execution_note": "Actual full-suite output captured earlier this turn; only Exercise 2 docstring changed afterwards."
+    "stdout_summary": "43 passed in 17.06s",
+    "execution_note": "Actual full-suite output completed earlier in the Exercise 4 implementation. The browser helper's initial visibility timeout/formatting and documentation/evidence updates followed; no application or test logic changed after the suite."
   },
   "source_hashes": {
     "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
@@ -54,29 +47,31 @@
     "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
     "exercises/exercise_2_hitl.py": "55495549fe779958cfa556b13dbd422b0fe96d424b8070e81b7f55f4cfa76d04",
     "exercises/exercise_3_escalation.py": "5e1d0ced32f4747f284e8fa237d495fdb779ffdb390eaa619ecd9d9a5aeebf68",
-    "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+    "exercises/exercise_4_audit.py": "87249e36dbd2cbef90655760cb40a47505e3c14c1b2415b86364612c991cfb0d",
     "exercises/review_support.py": "f53e6e21d2c85c89ae58dd309488fdbe33cc5949d8967e6a11e12b3fbbd3f239",
-    "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+    "exercises/runtime.py": "cbfdee09bdaaf74ccab7618721eced66d2dafafc42f85b67e888ddebbaf4b356",
     "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
     "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
     "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
     "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
     "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d",
+    "audit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "audit/replay.py": "309b32e978d005a479c5d37cf6266e65d82c5f7a6d808e33f242577bebdc4172",
     "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
   },
   "evidence_hashes": {
-    "screenshots/01-workspace.png": "be860ed7acdede8b75ba00a951c1b2fe1345612f4151012221ca9cf37bc8c1c9",
-    "screenshots/02-approval.png": "99de9855461a68c83aa22865aaa586e58b806b490ac42a483b43b5a705ee1915",
-    "screenshots/03-edited-draft.png": "a0f1cbafbc1d587bede93c1261cccefb6175e1b92082b6930db85745431736b8",
-    "screenshots/04-escalation.png": "6d3aef8d7e8735aa2c77e57ea79c658e5e0b12e8dc7777f2c3fd0c2ba039f0f7",
-    "screenshots/05-refined-review.png": "3cbdbf677f059757560519b817a699d30d97f1ccd1c75c3e66ac3ae2d148a244",
-    "screenshots/06-auto-preview.png": "eeca40c2ca5944a89d2671a3594a099dda4e476f40f910951098e62ec2e6c4ee",
-    "screenshots/07-live-pr1.png": "2910d7ee923e64001e4a71bdcae2d3e511b461b08f9b80b3090efd22f94d2305",
-    "screenshots/08-live-pr2.png": "97ff5cfbe97526f4e8cf79087ae132e45780330ed3ca109aac27800f9ce6312a",
+    "screenshots/01-workspace.png": "e006cb7ad3b079eb7a5bfe07df4b291f0ffaa332055a13bc21fd43175c715b34",
+    "screenshots/02-approval.png": "33a8908de7d467ce998c799abd1a6b956813ec3d4fcfb0f90a718d8a42974440",
+    "screenshots/03-edited-draft.png": "619f4b534e3504f2528638223dae6088ccc1a3dfee93fce7e79c4e33199982f1",
+    "screenshots/04-escalation.png": "87df59c413e3c07bb83515e327e55fd731d7f005103dc12984fdf4dac1c79196",
+    "screenshots/05-refined-review.png": "434908c4a459eb35a91db884ecd70cc42b9525db7b8ee18a5d2dbb94df12938e",
+    "screenshots/06-auto-preview.png": "de97a8af08d9cf841bbfcd203d36107b2cec132c8d6e597d7c3b680ba35bab27",
+    "screenshots/07-live-pr1.png": "c2df157be39d8ad8db4c4db299f2b457ae4f91114598ba4a0028415208a73d09",
+    "screenshots/08-live-pr2.png": "fb32bc5182d4553d74bcc8abd0d51f9f48631c6976626f516dd23b8da45bb6b3",
     "screenshots/09-mobile.png": "201f16c802f99259dc4a294fa69dfbd6c4e9ef447be217c0843e83253a1fb44d",
-    "reports/evidence/browser_checks.json": "ab24c8c4ca74ab90ec3e08c8f2d72ab460446f000903392596872e2b3e3feff9",
-    "reports/evidence/browser_controls.json": "524695cae2b764b3a3da3561b9690d88a5aff27f62c3a53929bb07ce3173b5bf",
+    "reports/evidence/browser_checks.json": "7d0589b870db0107bcc4b7a39f5b9493d1e2a15518858a1bc773815873e3f4f4",
+    "reports/evidence/browser_controls.json": "77fc9175c20827ed159a017cf25c60d40c5f36992cca37074d127e5e5bca60a7",
     "reports/evidence/exercise1_runs.json": "079b2d9ab5a4caed3516e6e629bf1d81498b01749e135c0d4ec9922ab02cba5b",
     "reports/evidence/exercise2_approval.json": "99f62e100611eb33454c95b26c98ed1906c6aa5f56d4ad7ff41583821ab2fe99",
     "reports/evidence/exercise2_checks.json": "39549f3e1de4da751963034dd42e686cd9645279bba09649b7ae486773675bb8",
@@ -87,17 +82,21 @@
     "reports/evidence/exercise3_live.json": "a308db379cbaedde457deaa7047c3e7f7a0f04d5eaa321ae60cd4c60a3fbf9b1",
     "reports/evidence/exercise3_offline.json": "dffa360e7e1cff29d61ddc681f4ba7170fb1b7c9fee8ef676fc041ecb5ac44f5",
     "reports/evidence/exercise3_synthesis_probe.json": "aabba37a4abb3c7396b089e049aa83e6eac27c58b1f4ce795b7d261930fbd9d5",
+    "reports/evidence/exercise4_live.json": "f6f936ee0d1a2171a7284011cbd9292aae1be517f8a88f61d8f48afc4991e656",
     "reports/evidence/live_runs.json": "b8aff06b9401989327d1e8b5c14d26d351122a1b1245a7a0c81c48fdcd7d2a06",
-    "reports/evidence/offline_runs.json": "ea55846c6ea1be36f96dcd8c686460eb8ece6f24dae0dca6837e98f07063f748",
+    "reports/evidence/offline_runs.json": "680dd06e9d55d31e0c27a248d8c274066b737479dcb64b9ce3fed11ec22e7960",
     "reports/evidence/setup.json": "429bc0245989dbf6775ae0d307339626210a699214b33abb8c24da8a063f6e40",
     "reports/drafts/exercise2-review.md": "87d370ada429010a9f3145b39af793fb8c207c8ae591d74f5a4ff9738e1b53de",
     "reports/drafts/exercise3-answers.md": "fc28e639364f36c00394b0ebeb38d36e4b80efbe0c52d23d8857d431196d64cf",
     "reports/drafts/exercise3-review-probe.md": "2939d1341d93b4b36187de1d358baeff75387a29eaf21e053e72859e689eb068",
-    "README.md": "0b67f89324114d73c34a470fd02f3af60785f248341c328944cd604c9a70a576",
+    "README.md": "205ca0fac15416ed1a91b0b9b7d809febf9ac1f2f6e11a0be31c9d59650690a7",
     "docs/SETUP.md": "9e247356b62939842bf4795cb167d89e0f169a19676ac237f0eaa3d839edc1c9",
-    "reports/REPORT.md": "fd14d1307545b9e142c05b8f03b4fe8e2ddb3081490cbe158c4d6de05f528b99",
-    "reports/evidence/README.md": "4910ba1ba1395975a7b9b3dc7f6b050285c837496a7a01134915ae0950e409b3",
-    "tests/test_review_agent.py": "88b3f3ff06e8913781aeba3ef8571d013e0a1adf758d467406836babf88281cc"
+    "reports/REPORT.md": "696d050ac0792344a81d6d57d20f62194e6f4c112f3e82f878d70f4379cef243",
+    "reports/evidence/README.md": "794b19b3b06f8e36152171eca374188453bb335bf1527ee0283d6fb8b1c93da8",
+    "tests/test_review_agent.py": "1c56d18da47dd9a2ebebbdafc7015a9b768ecbfd742dfc8d96fff18ce2ee3adb",
+    "scripts/run_evidence.py": "0c08fad5b51b055f2e5aac8cebc7bdb173a02f124062e045fc4952636348e326",
+    "scripts/browser_evidence.py": "e6a8ee3a2e936e4a8bce22b59741fe3f9dd946d3aad546516c1cf5ad0022810a",
+    ".github/workflows/checks.yml": "53a1958a0d2db692581d51271a74bc20d9c368a637780a66dac36b29a651ee69"
   },
   "historical_execution_source_differences": {
     "live_runs.json": [
@@ -116,39 +115,45 @@
       "audit/schema.sql"
     ],
     "exercise3_live.json": [
-      "exercises/exercise_2_hitl.py"
+      "exercises/exercise_2_hitl.py",
+      "exercises/exercise_4_audit.py",
+      "exercises/runtime.py"
     ],
-    "exercise3_offline.json": [
-      "exercises/exercise_2_hitl.py"
-    ],
-    "exercise3_synthesis_probe.json": []
+    "exercise4_live.json": []
   },
-  "historical_source_note": "Preserved all execution hashes. Exercise 2 docstring was corrected after initial live and offline Exercise 3 runs; no semantic difference.",
+  "historical_source_note": "Original execution hashes remain unchanged. New hash coverage includes audit Python modules. Git text artifacts are normalized to LF before final hashing.",
   "browser_checks": {
     "passed": 8,
     "page_errors": 0,
-    "timestamp_utc": "2026-10-15T07:19:18.964195+00:00"
+    "timestamp_utc": "2026-10-15T07:38:43.454312+00:00"
+  },
+  "exercise4": {
+    "report": "reports/evidence/exercise4_live.json",
+    "thread_id": "df03bd5b-68f5-4881-8e10-14f6793c9d18",
+    "confidence": 0.65,
+    "event_count_after_resume": 7,
+    "pending_approval_count": 2,
+    "fetch_count": 1,
+    "analyze_count": 1,
+    "high_risk_auto_count": 0,
+    "new_process_resume": true,
+    "response_provenance": "Scripted rejection labeled automated-exercise4-validation; not a human decision."
   },
   "offline_source_hashes_match": true,
+  "exercise4_execution_source_hashes_match": true,
   "github_comments_posted_during_verification": 0,
   "exercise2_publication_status": "awaiting_actual_user_approval",
-  "exercise3_reviewer_status": "awaiting_actual_answers; separate actual provider synthesis probe used clearly labeled synthetic input",
+  "exercise3_reviewer_status": "awaiting_actual_user_answers",
   "secret_scan": {
     "configured_secret_matches": 0,
     "token_pattern_matches_excluding_original_lab_placeholder": 0,
     "env_and_databases_untracked": true
   },
   "previous_validation": {
-    "timestamp_utc": "2026-10-15T07:10:22.565206+00:00",
+    "timestamp_utc": "2026-10-15T07:26:22.967423+00:00",
     "python_version": "3.12.6",
-    "scope": "Final Exercise 2 targeted regression and refreshed offline/browser evidence. Full 33-test result previously observed; no new live model calls during these checks.",
+    "scope": "Exercise 3 final checks, actual initial analysis, actual synthesis with synthetic answer context, offline fixtures and browser regression; public publication remains pending.",
     "checks": [
-      {
-        "command": "uv run pytest -q tests/test_review_agent.py -k exercise2",
-        "exit_code": 0,
-        "stdout": "....                                                                     [100%]\n4 passed, 29 deselected in 3.21s",
-        "stderr": ""
-      },
       {
         "command": "uv run ruff check exercises app.py scripts tests",
         "exit_code": 0,
@@ -165,36 +170,43 @@
         "command": "uv pip check",
         "exit_code": 0,
         "stdout": "",
-        "stderr": "Checked 87 packages in 23ms\nAll installed packages are compatible"
+        "stderr": "Checked 87 packages in 16ms\nAll installed packages are compatible"
       },
       {
         "command": "git diff --check",
         "exit_code": 0,
         "stdout": "",
-        "stderr": "warning: in the working copy of 'reports/evidence/browser_checks.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'reports/evidence/browser_controls.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'reports/evidence/offline_runs.json', CRLF will be replaced by LF the next time Git touches it"
+        "stderr": ""
       },
       {
         "command": "git diff --exit-code -- common audit",
         "exit_code": 0,
         "stdout": "",
         "stderr": ""
+      },
+      {
+        "command": "git diff HEAD^ --check",
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": "",
+        "note": "Includes newly added artifacts; removed an extra final blank line from the proposed answers."
       }
     ],
     "latest_full_test_suite": {
       "command": "uv run pytest -q",
       "exit_code": 0,
-      "stdout": "33 passed in 12.19s",
-      "log_source": "agent tool output before context compaction; not a new test execution"
+      "stdout": "39 passed in 9.99s",
+      "execution_note": "Actual full-suite output captured earlier this turn; only Exercise 2 docstring changed afterwards."
     },
     "source_hashes": {
       "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
       "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
       "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
       "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
-      "exercises/exercise_2_hitl.py": "490e0bf66f47cbb0bdd897bd383e601b03e73047e1968d7669573b0756cdef2e",
-      "exercises/exercise_3_escalation.py": "a55fc4b17cc11f94dd2fa4a5ec1bfbe42b9917b0bb4c99f2eb02d5e5e43d7388",
+      "exercises/exercise_2_hitl.py": "55495549fe779958cfa556b13dbd422b0fe96d424b8070e81b7f55f4cfa76d04",
+      "exercises/exercise_3_escalation.py": "5e1d0ced32f4747f284e8fa237d495fdb779ffdb390eaa619ecd9d9a5aeebf68",
       "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
-      "exercises/review_support.py": "63f38609b9cfcc6287c4a8ef69e31d60f752dd2a0129fb721a6764ec6cdd2c50",
+      "exercises/review_support.py": "f53e6e21d2c85c89ae58dd309488fdbe33cc5949d8967e6a11e12b3fbbd3f239",
       "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
       "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
       "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -205,65 +217,89 @@
       "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
     },
     "evidence_hashes": {
-      "screenshots/01-workspace.png": "356da15e2f79245a7f00d0e45ad2c8fc2f973cd0b514330639844ccb82130eab",
-      "screenshots/02-approval.png": "9e65fb451b297a6d34e7dd21c42a9ed618126e125d1b794e3f57addc90c8c2cc",
-      "screenshots/03-edited-draft.png": "c0f1e4680bb5e52db3a8211ae1176555481432ab0470db5b32bc29f9597973f2",
-      "screenshots/04-escalation.png": "b9f217680ab2bb1d616f5a31508879b34a60f37b049255412a14e290bd39a04f",
-      "screenshots/05-refined-review.png": "4955f34c68981a7ec4a38040f3e77101e82d1f80b6f36507c8cfec042b5ab6d3",
-      "screenshots/06-auto-preview.png": "f097d3c3c3aef9abe6e08d8cc9066a17b3172406bd2dd1d979b5e8b9823a7faa",
-      "screenshots/07-live-pr1.png": "b567d9a756134e021d6170c3105bb4646923ee7de4568acfc1da35d652c4c35b",
-      "screenshots/08-live-pr2.png": "be10419050f84046194ab3fb710662b355717dad2d4eb634dc5b5284ad63947a",
+      "screenshots/01-workspace.png": "be860ed7acdede8b75ba00a951c1b2fe1345612f4151012221ca9cf37bc8c1c9",
+      "screenshots/02-approval.png": "99de9855461a68c83aa22865aaa586e58b806b490ac42a483b43b5a705ee1915",
+      "screenshots/03-edited-draft.png": "a0f1cbafbc1d587bede93c1261cccefb6175e1b92082b6930db85745431736b8",
+      "screenshots/04-escalation.png": "6d3aef8d7e8735aa2c77e57ea79c658e5e0b12e8dc7777f2c3fd0c2ba039f0f7",
+      "screenshots/05-refined-review.png": "3cbdbf677f059757560519b817a699d30d97f1ccd1c75c3e66ac3ae2d148a244",
+      "screenshots/06-auto-preview.png": "eeca40c2ca5944a89d2671a3594a099dda4e476f40f910951098e62ec2e6c4ee",
+      "screenshots/07-live-pr1.png": "2910d7ee923e64001e4a71bdcae2d3e511b461b08f9b80b3090efd22f94d2305",
+      "screenshots/08-live-pr2.png": "97ff5cfbe97526f4e8cf79087ae132e45780330ed3ca109aac27800f9ce6312a",
       "screenshots/09-mobile.png": "201f16c802f99259dc4a294fa69dfbd6c4e9ef447be217c0843e83253a1fb44d",
-      "reports/evidence/browser_checks.json": "6556be7e7e9070c5329239c6c70f9d2ad444cff0addc0810c682fbe6d3b41326",
-      "reports/evidence/browser_controls.json": "feaa02ac8d5227b7ce09e3b5c2e783f98e3d2e6646269aa885b100b87d4bd46f",
+      "reports/evidence/browser_checks.json": "ab24c8c4ca74ab90ec3e08c8f2d72ab460446f000903392596872e2b3e3feff9",
+      "reports/evidence/browser_controls.json": "524695cae2b764b3a3da3561b9690d88a5aff27f62c3a53929bb07ce3173b5bf",
       "reports/evidence/exercise1_runs.json": "079b2d9ab5a4caed3516e6e629bf1d81498b01749e135c0d4ec9922ab02cba5b",
       "reports/evidence/exercise2_approval.json": "99f62e100611eb33454c95b26c98ed1906c6aa5f56d4ad7ff41583821ab2fe99",
       "reports/evidence/exercise2_checks.json": "39549f3e1de4da751963034dd42e686cd9645279bba09649b7ae486773675bb8",
       "reports/evidence/exercise2_low_confidence.json": "8ea4fe31d9e7d89add3050ef1804d40a654907534237ec4657ea355e8e0bbff9",
       "reports/evidence/exercise2_reject.json": "fb9f10a2ef698e0f2675344c9affa958095b43e036c5dab0188ea9360524b96f",
       "reports/evidence/exercise2_reject_input_failure.json": "1e93db2a2635bd9c037022acd6a656692f02b01e9f8229503d7693b31df6a6a0",
+      "reports/evidence/exercise3_checks.json": "a127b96599e99e1591f528648e5f8999a2c477ae41dbef1be624e03730699eaa",
+      "reports/evidence/exercise3_live.json": "a308db379cbaedde457deaa7047c3e7f7a0f04d5eaa321ae60cd4c60a3fbf9b1",
+      "reports/evidence/exercise3_offline.json": "dffa360e7e1cff29d61ddc681f4ba7170fb1b7c9fee8ef676fc041ecb5ac44f5",
+      "reports/evidence/exercise3_synthesis_probe.json": "aabba37a4abb3c7396b089e049aa83e6eac27c58b1f4ce795b7d261930fbd9d5",
       "reports/evidence/live_runs.json": "b8aff06b9401989327d1e8b5c14d26d351122a1b1245a7a0c81c48fdcd7d2a06",
-      "reports/evidence/offline_runs.json": "4d8b6120cb0a020978b36c1c889fc9c16b235da37995d4fb75d23576e1d62818",
+      "reports/evidence/offline_runs.json": "ea55846c6ea1be36f96dcd8c686460eb8ece6f24dae0dca6837e98f07063f748",
       "reports/evidence/setup.json": "429bc0245989dbf6775ae0d307339626210a699214b33abb8c24da8a063f6e40",
       "reports/drafts/exercise2-review.md": "87d370ada429010a9f3145b39af793fb8c207c8ae591d74f5a4ff9738e1b53de",
-      "README.md": "7725761135125f910395e2a9140de1af374e1b0a0199c0ab86a0b79576b74a26",
-      "docs/SETUP.md": "1622304d1ed163361316dee8fb182cbc490bc5c465a16a7c5df62ef9a7c0466d",
-      "reports/REPORT.md": "8135077a8b87e4601ca652b61a99affefaecffaafb72d877fdab83d0d3ebf4f4",
-      "reports/evidence/README.md": "5702b90fa7dac4801c8618af129e95761e65cd4f9a54c0347a422cc64cf1371c",
-      "tests/test_review_agent.py": "f5a71216d417d8da6db46985ab0e8717eff626f4b6757347be2ae7d89c3d12ba"
+      "reports/drafts/exercise3-answers.md": "fc28e639364f36c00394b0ebeb38d36e4b80efbe0c52d23d8857d431196d64cf",
+      "reports/drafts/exercise3-review-probe.md": "2939d1341d93b4b36187de1d358baeff75387a29eaf21e053e72859e689eb068",
+      "README.md": "0b67f89324114d73c34a470fd02f3af60785f248341c328944cd604c9a70a576",
+      "docs/SETUP.md": "9e247356b62939842bf4795cb167d89e0f169a19676ac237f0eaa3d839edc1c9",
+      "reports/REPORT.md": "fd14d1307545b9e142c05b8f03b4fe8e2ddb3081490cbe158c4d6de05f528b99",
+      "reports/evidence/README.md": "4910ba1ba1395975a7b9b3dc7f6b050285c837496a7a01134915ae0950e409b3",
+      "tests/test_review_agent.py": "88b3f3ff06e8913781aeba3ef8571d013e0a1adf758d467406836babf88281cc"
     },
-    "historical_live_execution_source_differences": [
-      "app.py",
-      "pyproject.toml",
-      "exercises/exercise_1_confidence.py",
-      "exercises/exercise_2_hitl.py",
-      "exercises/exercise_4_audit.py",
-      "exercises/review_support.py",
-      "exercises/runtime.py",
-      "common/db.py",
-      "common/github.py",
-      "common/llm.py",
-      "common/schemas.py",
-      "audit/schema.sql"
-    ],
+    "historical_execution_source_differences": {
+      "live_runs.json": [
+        "app.py",
+        "pyproject.toml",
+        "exercises/exercise_1_confidence.py",
+        "exercises/exercise_2_hitl.py",
+        "exercises/exercise_3_escalation.py",
+        "exercises/exercise_4_audit.py",
+        "exercises/review_support.py",
+        "exercises/runtime.py",
+        "common/db.py",
+        "common/github.py",
+        "common/llm.py",
+        "common/schemas.py",
+        "audit/schema.sql"
+      ],
+      "exercise3_live.json": [
+        "exercises/exercise_2_hitl.py"
+      ],
+      "exercise3_offline.json": [
+        "exercises/exercise_2_hitl.py"
+      ],
+      "exercise3_synthesis_probe.json": []
+    },
+    "historical_source_note": "Preserved all execution hashes. Exercise 2 docstring was corrected after initial live and offline Exercise 3 runs; no semantic difference.",
     "browser_checks": {
       "passed": 8,
       "page_errors": 0,
-      "timestamp_utc": "2026-10-15T07:08:42.820712+00:00"
+      "timestamp_utc": "2026-10-15T07:19:18.964195+00:00"
     },
     "offline_source_hashes_match": true,
     "github_comments_posted_during_verification": 0,
     "exercise2_publication_status": "awaiting_actual_user_approval",
+    "exercise3_reviewer_status": "awaiting_actual_answers; separate actual provider synthesis probe used clearly labeled synthetic input",
     "secret_scan": {
       "configured_secret_matches": 0,
       "token_pattern_matches_excluding_original_lab_placeholder": 0,
       "env_and_databases_untracked": true
     },
     "previous_validation": {
-      "timestamp_utc": "2026-10-15T06:39:01.459811+00:00",
+      "timestamp_utc": "2026-10-15T07:10:22.565206+00:00",
       "python_version": "3.12.6",
-      "scope": "offline checks on final source; original live executions preserved, no new live LLM calls",
+      "scope": "Final Exercise 2 targeted regression and refreshed offline/browser evidence. Full 33-test result previously observed; no new live model calls during these checks.",
       "checks": [
+        {
+          "command": "uv run pytest -q tests/test_review_agent.py -k exercise2",
+          "exit_code": 0,
+          "stdout": "....                                                                     [100%]\n4 passed, 29 deselected in 3.21s",
+          "stderr": ""
+        },
         {
           "command": "uv run ruff check exercises app.py scripts tests",
           "exit_code": 0,
@@ -277,22 +313,16 @@
           "stderr": ""
         },
         {
-          "command": "uv run pytest -q",
-          "exit_code": 0,
-          "stdout": "..............................                                           [100%]\n30 passed in 7.58s",
-          "stderr": ""
-        },
-        {
           "command": "uv pip check",
           "exit_code": 0,
           "stdout": "",
-          "stderr": "Checked 87 packages in 18ms\nAll installed packages are compatible"
+          "stderr": "Checked 87 packages in 23ms\nAll installed packages are compatible"
         },
         {
           "command": "git diff --check",
           "exit_code": 0,
           "stdout": "",
-          "stderr": ""
+          "stderr": "warning: in the working copy of 'reports/evidence/browser_checks.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'reports/evidence/browser_controls.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'reports/evidence/offline_runs.json', CRLF will be replaced by LF the next time Git touches it"
         },
         {
           "command": "git diff --exit-code -- common audit",
@@ -301,15 +331,21 @@
           "stderr": ""
         }
       ],
+      "latest_full_test_suite": {
+        "command": "uv run pytest -q",
+        "exit_code": 0,
+        "stdout": "33 passed in 12.19s",
+        "log_source": "agent tool output before context compaction; not a new test execution"
+      },
       "source_hashes": {
         "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
         "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
         "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
         "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
-        "exercises/exercise_2_hitl.py": "87ce133ed85994fec3f6dd598f31e7eb45b66ff2238c56ff427cf210a19f7aae",
+        "exercises/exercise_2_hitl.py": "490e0bf66f47cbb0bdd897bd383e601b03e73047e1968d7669573b0756cdef2e",
         "exercises/exercise_3_escalation.py": "a55fc4b17cc11f94dd2fa4a5ec1bfbe42b9917b0bb4c99f2eb02d5e5e43d7388",
         "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
-        "exercises/review_support.py": "e1906d7de4b6c6099623a60e13b87a2c4a41b3a3fe02ebe39f497b2bd52e34f7",
+        "exercises/review_support.py": "63f38609b9cfcc6287c4a8ef69e31d60f752dd2a0129fb721a6764ec6cdd2c50",
         "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
         "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
         "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -320,31 +356,40 @@
         "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
       },
       "evidence_hashes": {
-        "screenshots/01-workspace.png": "36968ce608d9e91c4fffdc48b6b9e9d032d1a4b53f663c90c41ae82bb47cc842",
-        "screenshots/02-approval.png": "962f625067a50e829a2f0aa6590fc1ad2081a0219c39f0e57aca5577fb31e865",
-        "screenshots/03-edited-draft.png": "9efd70795c562bdd7f524d1977537bd3b979bbc6fc3a9f6e32d51e8cb32f225e",
-        "screenshots/04-escalation.png": "f28670a0f33432ebc93c7da610836d2694cc33bbb10430793866ceac42fffd58",
-        "screenshots/05-refined-review.png": "b0da6b23c574e88b5930aeeff7568f29e4b1b52316e5c4751d4627a7c325b294",
-        "screenshots/06-auto-preview.png": "552d7ff9d89ef274c13820ea5fac89eb0170f14125fa4595be4e4e4aff75129e",
-        "screenshots/07-live-pr1.png": "71f1ba124e125e8c69a8b5b51cf44db6318acdc09c354f72de1f73b25ab2724d",
-        "screenshots/08-live-pr2.png": "d8dc5cb522d5a56c16626c0765a3d633dadc99c12a6a9eb2d4ebe724ad4f3a51",
+        "screenshots/01-workspace.png": "356da15e2f79245a7f00d0e45ad2c8fc2f973cd0b514330639844ccb82130eab",
+        "screenshots/02-approval.png": "9e65fb451b297a6d34e7dd21c42a9ed618126e125d1b794e3f57addc90c8c2cc",
+        "screenshots/03-edited-draft.png": "c0f1e4680bb5e52db3a8211ae1176555481432ab0470db5b32bc29f9597973f2",
+        "screenshots/04-escalation.png": "b9f217680ab2bb1d616f5a31508879b34a60f37b049255412a14e290bd39a04f",
+        "screenshots/05-refined-review.png": "4955f34c68981a7ec4a38040f3e77101e82d1f80b6f36507c8cfec042b5ab6d3",
+        "screenshots/06-auto-preview.png": "f097d3c3c3aef9abe6e08d8cc9066a17b3172406bd2dd1d979b5e8b9823a7faa",
+        "screenshots/07-live-pr1.png": "b567d9a756134e021d6170c3105bb4646923ee7de4568acfc1da35d652c4c35b",
+        "screenshots/08-live-pr2.png": "be10419050f84046194ab3fb710662b355717dad2d4eb634dc5b5284ad63947a",
         "screenshots/09-mobile.png": "201f16c802f99259dc4a294fa69dfbd6c4e9ef447be217c0843e83253a1fb44d",
-        "reports/evidence/browser_checks.json": "7cd0fbc08354c0447997e8c14dcb19a21df2ab25281d24dcc1e442398d7e5f3b",
-        "reports/evidence/browser_controls.json": "39c4fe17a9560edc9d922c6b5c43f7accfa357d53b70536f6b457865c989be07",
+        "reports/evidence/browser_checks.json": "6556be7e7e9070c5329239c6c70f9d2ad444cff0addc0810c682fbe6d3b41326",
+        "reports/evidence/browser_controls.json": "feaa02ac8d5227b7ce09e3b5c2e783f98e3d2e6646269aa885b100b87d4bd46f",
+        "reports/evidence/exercise1_runs.json": "079b2d9ab5a4caed3516e6e629bf1d81498b01749e135c0d4ec9922ab02cba5b",
+        "reports/evidence/exercise2_approval.json": "99f62e100611eb33454c95b26c98ed1906c6aa5f56d4ad7ff41583821ab2fe99",
+        "reports/evidence/exercise2_checks.json": "39549f3e1de4da751963034dd42e686cd9645279bba09649b7ae486773675bb8",
+        "reports/evidence/exercise2_low_confidence.json": "8ea4fe31d9e7d89add3050ef1804d40a654907534237ec4657ea355e8e0bbff9",
+        "reports/evidence/exercise2_reject.json": "fb9f10a2ef698e0f2675344c9affa958095b43e036c5dab0188ea9360524b96f",
+        "reports/evidence/exercise2_reject_input_failure.json": "1e93db2a2635bd9c037022acd6a656692f02b01e9f8229503d7693b31df6a6a0",
         "reports/evidence/live_runs.json": "b8aff06b9401989327d1e8b5c14d26d351122a1b1245a7a0c81c48fdcd7d2a06",
-        "reports/evidence/offline_runs.json": "1d1e2f2678ded09b0fee6828da2d705ba55dd611f189d63e3d95624e6d723338",
-        "reports/evidence/README.md": "91ff39709efd4722a2b8b0cbd3e995250c31ff33a72dce14ed6bb467f08b78c2",
+        "reports/evidence/offline_runs.json": "4d8b6120cb0a020978b36c1c889fc9c16b235da37995d4fb75d23576e1d62818",
         "reports/evidence/setup.json": "429bc0245989dbf6775ae0d307339626210a699214b33abb8c24da8a063f6e40",
-        "docs/SETUP.md": "8630a25584abe31d76648fd4f0446fe99c8cccdf86de89d2eaf8c16baec17df5",
-        "README.md": "71d6a5dd4af90c0fca6781341e390c8415ab0eacddfda75ae68344ad34fd3bd2",
-        "reports/REPORT.md": "5f36b2622c3c7cb7b1488de2fb26cb64a6bff3f32047704102bf56ecc1a7ee0d",
-        "reports/evidence/exercise1_runs.json": "079b2d9ab5a4caed3516e6e629bf1d81498b01749e135c0d4ec9922ab02cba5b"
+        "reports/drafts/exercise2-review.md": "87d370ada429010a9f3145b39af793fb8c207c8ae591d74f5a4ff9738e1b53de",
+        "README.md": "7725761135125f910395e2a9140de1af374e1b0a0199c0ab86a0b79576b74a26",
+        "docs/SETUP.md": "1622304d1ed163361316dee8fb182cbc490bc5c465a16a7c5df62ef9a7c0466d",
+        "reports/REPORT.md": "8135077a8b87e4601ca652b61a99affefaecffaafb72d877fdab83d0d3ebf4f4",
+        "reports/evidence/README.md": "5702b90fa7dac4801c8618af129e95761e65cd4f9a54c0347a422cc64cf1371c",
+        "tests/test_review_agent.py": "f5a71216d417d8da6db46985ab0e8717eff626f4b6757347be2ae7d89c3d12ba"
       },
       "historical_live_execution_source_differences": [
         "app.py",
         "pyproject.toml",
         "exercises/exercise_1_confidence.py",
+        "exercises/exercise_2_hitl.py",
         "exercises/exercise_4_audit.py",
+        "exercises/review_support.py",
         "exercises/runtime.py",
         "common/db.py",
         "common/github.py",
@@ -355,31 +400,138 @@
       "browser_checks": {
         "passed": 8,
         "page_errors": 0,
-        "timestamp_utc": "2026-10-15T06:35:04.060470+00:00"
+        "timestamp_utc": "2026-10-15T07:08:42.820712+00:00"
       },
       "offline_source_hashes_match": true,
       "github_comments_posted_during_verification": 0,
+      "exercise2_publication_status": "awaiting_actual_user_approval",
       "secret_scan": {
         "configured_secret_matches": 0,
         "token_pattern_matches_excluding_original_lab_placeholder": 0,
         "env_and_databases_untracked": true
       },
-      "normalization_note": "After offline checks, common/ and audit/ working files were restored to exact original Git blob bytes (CRLF to LF only); offline graph evidence was regenerated. No semantic code changes.",
-      "subsequent_preparation_check": {
-        "timestamp_utc": "2026-10-15T06:50:20.627592+00:00",
-        "report": "reports/evidence/setup.json",
-        "scope": "repository rename, fresh environment, credential checks and documentation; no application source changes",
-        "previous_evidence_index_hash": "321c4c3154c3350fe02f49617f8c7d4f1bcdf687010a158d89b54c708db84151",
-        "source_hashes_unchanged": true
+      "previous_validation": {
+        "timestamp_utc": "2026-10-15T06:39:01.459811+00:00",
+        "python_version": "3.12.6",
+        "scope": "offline checks on final source; original live executions preserved, no new live LLM calls",
+        "checks": [
+          {
+            "command": "uv run ruff check exercises app.py scripts tests",
+            "exit_code": 0,
+            "stdout": "All checks passed!",
+            "stderr": ""
+          },
+          {
+            "command": "uv run ruff format --check exercises app.py scripts tests",
+            "exit_code": 0,
+            "stdout": "12 files already formatted",
+            "stderr": ""
+          },
+          {
+            "command": "uv run pytest -q",
+            "exit_code": 0,
+            "stdout": "..............................                                           [100%]\n30 passed in 7.58s",
+            "stderr": ""
+          },
+          {
+            "command": "uv pip check",
+            "exit_code": 0,
+            "stdout": "",
+            "stderr": "Checked 87 packages in 18ms\nAll installed packages are compatible"
+          },
+          {
+            "command": "git diff --check",
+            "exit_code": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "command": "git diff --exit-code -- common audit",
+            "exit_code": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        ],
+        "source_hashes": {
+          "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
+          "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
+          "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+          "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+          "exercises/exercise_2_hitl.py": "87ce133ed85994fec3f6dd598f31e7eb45b66ff2238c56ff427cf210a19f7aae",
+          "exercises/exercise_3_escalation.py": "a55fc4b17cc11f94dd2fa4a5ec1bfbe42b9917b0bb4c99f2eb02d5e5e43d7388",
+          "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+          "exercises/review_support.py": "e1906d7de4b6c6099623a60e13b87a2c4a41b3a3fe02ebe39f497b2bd52e34f7",
+          "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+          "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+          "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+          "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+          "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+          "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d",
+          "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
+        },
+        "evidence_hashes": {
+          "screenshots/01-workspace.png": "36968ce608d9e91c4fffdc48b6b9e9d032d1a4b53f663c90c41ae82bb47cc842",
+          "screenshots/02-approval.png": "962f625067a50e829a2f0aa6590fc1ad2081a0219c39f0e57aca5577fb31e865",
+          "screenshots/03-edited-draft.png": "9efd70795c562bdd7f524d1977537bd3b979bbc6fc3a9f6e32d51e8cb32f225e",
+          "screenshots/04-escalation.png": "f28670a0f33432ebc93c7da610836d2694cc33bbb10430793866ceac42fffd58",
+          "screenshots/05-refined-review.png": "b0da6b23c574e88b5930aeeff7568f29e4b1b52316e5c4751d4627a7c325b294",
+          "screenshots/06-auto-preview.png": "552d7ff9d89ef274c13820ea5fac89eb0170f14125fa4595be4e4e4aff75129e",
+          "screenshots/07-live-pr1.png": "71f1ba124e125e8c69a8b5b51cf44db6318acdc09c354f72de1f73b25ab2724d",
+          "screenshots/08-live-pr2.png": "d8dc5cb522d5a56c16626c0765a3d633dadc99c12a6a9eb2d4ebe724ad4f3a51",
+          "screenshots/09-mobile.png": "201f16c802f99259dc4a294fa69dfbd6c4e9ef447be217c0843e83253a1fb44d",
+          "reports/evidence/browser_checks.json": "7cd0fbc08354c0447997e8c14dcb19a21df2ab25281d24dcc1e442398d7e5f3b",
+          "reports/evidence/browser_controls.json": "39c4fe17a9560edc9d922c6b5c43f7accfa357d53b70536f6b457865c989be07",
+          "reports/evidence/live_runs.json": "b8aff06b9401989327d1e8b5c14d26d351122a1b1245a7a0c81c48fdcd7d2a06",
+          "reports/evidence/offline_runs.json": "1d1e2f2678ded09b0fee6828da2d705ba55dd611f189d63e3d95624e6d723338",
+          "reports/evidence/README.md": "91ff39709efd4722a2b8b0cbd3e995250c31ff33a72dce14ed6bb467f08b78c2",
+          "reports/evidence/setup.json": "429bc0245989dbf6775ae0d307339626210a699214b33abb8c24da8a063f6e40",
+          "docs/SETUP.md": "8630a25584abe31d76648fd4f0446fe99c8cccdf86de89d2eaf8c16baec17df5",
+          "README.md": "71d6a5dd4af90c0fca6781341e390c8415ab0eacddfda75ae68344ad34fd3bd2",
+          "reports/REPORT.md": "5f36b2622c3c7cb7b1488de2fb26cb64a6bff3f32047704102bf56ecc1a7ee0d",
+          "reports/evidence/exercise1_runs.json": "079b2d9ab5a4caed3516e6e629bf1d81498b01749e135c0d4ec9922ab02cba5b"
+        },
+        "historical_live_execution_source_differences": [
+          "app.py",
+          "pyproject.toml",
+          "exercises/exercise_1_confidence.py",
+          "exercises/exercise_4_audit.py",
+          "exercises/runtime.py",
+          "common/db.py",
+          "common/github.py",
+          "common/llm.py",
+          "common/schemas.py",
+          "audit/schema.sql"
+        ],
+        "browser_checks": {
+          "passed": 8,
+          "page_errors": 0,
+          "timestamp_utc": "2026-10-15T06:35:04.060470+00:00"
+        },
+        "offline_source_hashes_match": true,
+        "github_comments_posted_during_verification": 0,
+        "secret_scan": {
+          "configured_secret_matches": 0,
+          "token_pattern_matches_excluding_original_lab_placeholder": 0,
+          "env_and_databases_untracked": true
+        },
+        "normalization_note": "After offline checks, common/ and audit/ working files were restored to exact original Git blob bytes (CRLF to LF only); offline graph evidence was regenerated. No semantic code changes.",
+        "subsequent_preparation_check": {
+          "timestamp_utc": "2026-10-15T06:50:20.627592+00:00",
+          "report": "reports/evidence/setup.json",
+          "scope": "repository rename, fresh environment, credential checks and documentation; no application source changes",
+          "previous_evidence_index_hash": "321c4c3154c3350fe02f49617f8c7d4f1bcdf687010a158d89b54c708db84151",
+          "source_hashes_unchanged": true
+        },
+        "subsequent_exercise1_check": {
+          "timestamp_utc": "2026-10-15T06:53:50.724170+00:00",
+          "report": "reports/evidence/exercise1_runs.json",
+          "scope": "two actual direct-file CLI runs requested by Exercise 1; no application source changes",
+          "previous_evidence_index_hash": "332cb3ee1d10f0d518fddb588f45daf356e4d8324c29a73604c259d982d4f2ee",
+          "source_hashes_unchanged": true
+        }
       },
-      "subsequent_exercise1_check": {
-        "timestamp_utc": "2026-10-15T06:53:50.724170+00:00",
-        "report": "reports/evidence/exercise1_runs.json",
-        "scope": "two actual direct-file CLI runs requested by Exercise 1; no application source changes",
-        "previous_evidence_index_hash": "332cb3ee1d10f0d518fddb588f45daf356e4d8324c29a73604c259d982d4f2ee",
-        "source_hashes_unchanged": true
-      }
-    },
-    "artifact_newline_note": "Freshly generated browser/offline JSON normalized to LF before final evidence hashing; source and saved runtime values unchanged."
+      "artifact_newline_note": "Freshly generated browser/offline JSON normalized to LF before final evidence hashing; source and saved runtime values unchanged."
+    }
   }
 }

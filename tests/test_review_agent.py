@@ -1,16 +1,18 @@
 """Behavioral tests run offline against real LangGraph and SQLite checkpoints."""
 
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from langgraph.types import Command
 from streamlit.testing.v1 import AppTest
 
-from common.db import replay_events
-from common.schemas import PRAnalysis
+from common.db import db_conn, replay_events
+from common.schemas import PRAnalysis, risk_level_for
 from exercises import exercise_1_confidence as ex1
 from exercises import exercise_2_hitl as ex2
 from exercises import exercise_3_escalation as ex3
+from exercises import exercise_4_audit as ex4
 from exercises.review_support import (
     DemoBackend,
     analysis_messages,
@@ -83,7 +85,7 @@ class CountingBackend(DemoBackend):
         self.posts.append((pr_url, body))
 
 
-async def test_durable_resume_approval_and_audit_once():
+async def test_durable_resume_repeats_pending_audit_but_does_not_publish_twice():
     backend = CountingBackend()
     result = await run_session(url(), "durable", backend=backend)
     assert result["interrupt_payload"]["kind"] == "approval_request"
@@ -105,9 +107,16 @@ async def test_durable_resume_approval_and_audit_once():
         "route",
         "human_approval",
         "human_approval",
+        "human_approval",
         "commit",
     ]
-    assert sum(e["decision"] == "pending" and e["action"] == "human_approval" for e in events) == 1
+    assert sum(e["decision"] == "pending" and e["action"] == "human_approval" for e in events) == 2
+    assert events[0]["confidence"] == 0.0
+    assert events[0]["risk_level"] == "med"
+    assert events[0]["reviewer_id"] is None
+    assert events[2]["action"] == "route"
+    assert events[2]["decision"] == "pending"
+    assert all(e["reviewer_id"] is None for e in events[:-2])
     response = events[-2]
     assert response["reviewer_id"] == "fixture-reviewer"
     assert response["decision"] == "approve"
@@ -156,9 +165,11 @@ async def test_escalation_synthesis_requires_final_confirmation():
     result = await run_session(url(2), "qa", {"choice": "reject"}, backend=backend)
     assert result["final_action"] == "rejected"
     events = await replay_events("qa")
-    assert sum(e["action"] == "escalate" and e["decision"] == "pending" for e in events) == 1
+    assert sum(e["action"] == "escalate" and e["decision"] == "pending" for e in events) == 2
     synthesis = next(e for e in events if e["action"] == "synthesize")
     assert synthesis["confidence"] == 0.55
+    assert synthesis["risk_level"] == "high"
+    assert synthesis["reviewer_id"] is None
 
 
 async def test_auto_branch_does_not_interrupt_and_no_high_risk_auto_audit():
@@ -168,6 +179,140 @@ async def test_auto_branch_does_not_interrupt_and_no_high_risk_auto_audit():
     events = await replay_events("auto")
     assert any(e["action"] == "auto_approve" for e in events)
     assert not any(e["decision"] == "auto" and e["risk_level"] == "high" for e in events)
+
+
+async def test_audit_contract_across_all_routes():
+    expected_routes = {1: "pending", 2: "escalate", 3: "auto"}
+    for number in (1, 2, 3):
+        thread = f"audit-contract-{number}"
+        result = await run_session(url(number), thread, backend_mode="demo")
+        while result.get("interrupt_payload"):
+            payload = result["interrupt_payload"]
+            answer = (
+                {q: "Synthetic test context; existing risks remain." for q in payload["questions"]}
+                if payload["kind"] == "escalation"
+                else {"choice": "approve"}
+            )
+            result = await run_session(url(number), thread, answer)
+        events = await replay_events(thread)
+        assert (
+            next(e for e in events if e["action"] == "route")["decision"] == expected_routes[number]
+        )
+        for event in events:
+            assert event["decision"] in ex4.AUDIT_DECISIONS
+            assert event["execution_time_ms"] >= 0
+            if event["action"] == "fetch_pr":
+                assert (event["confidence"], event["risk_level"]) == (0.0, "med")
+            else:
+                assert event["risk_level"] == risk_level_for(event["confidence"])
+            human = event["action"] in {"human_approval", "escalate", "commit"} and event[
+                "decision"
+            ] in {"approve", "escalate"}
+            assert event["reviewer_id"] == ("fixture-reviewer" if human else None)
+    async with db_conn() as conn:
+        async with conn.execute(
+            "SELECT COUNT(*) FROM audit_events WHERE risk_level='high' AND decision='auto'"
+        ) as cursor:
+            assert (await cursor.fetchone())[0] == 0
+
+
+def test_audit_entry_timing_and_reviewer_use_observed_context(monkeypatch):
+    monkeypatch.setattr(ex4, "time", SimpleNamespace(monotonic=lambda: 100.125))
+    entry = ex4.entry_for(
+        {"reviewer_id": "untrusted-state-identity"},
+        "human_approval",
+        "approve",
+        100.0,
+        "Checked",
+        human=True,
+    )
+    assert entry.execution_time_ms == 125
+    assert entry.reviewer_id == "fixture-reviewer"
+    assert entry.confidence == 0.0
+    assert entry.risk_level == "med"
+    with pytest.raises(ValueError, match="Unsupported audit decision"):
+        ex4.entry_for({}, "commit", "failed", 100.0, "Failure belongs in reason")
+
+
+async def test_replay_list_uses_risk_severity_instead_of_alphabetic_max(monkeypatch):
+    from io import StringIO
+
+    from rich.console import Console
+
+    from audit import replay
+
+    await run_session(url(2), "high-risk-session", backend_mode="demo")
+    stream = StringIO()
+    monkeypatch.setattr(
+        replay, "Console", lambda: Console(file=stream, width=240, color_system=None)
+    )
+    await replay.list_threads()
+    row = next(line for line in stream.getvalue().splitlines() if "high-risk-session" in line)
+    assert [cell.strip() for cell in row.split("│")][-3] == "high"
+
+
+def test_checkpoint_survives_worker_exit_without_refetch_or_reanalysis():
+    import json
+    import subprocess
+    import sys
+    import textwrap
+
+    initial = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            textwrap.dedent("""
+                import asyncio, json, os
+                from exercises.runtime import run_session
+                result = asyncio.run(run_session(
+                    'https://github.com/demo/shop/pull/1', 'worker-crash', backend_mode='demo'
+                ))
+                print(json.dumps({'kind': result['interrupt_payload']['kind']}), flush=True)
+                os._exit(23)  # Worker dies after the pending checkpoint is durable.
+            """),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert initial.returncode == 23, initial.stderr
+    assert json.loads(initial.stdout)["kind"] == "approval_request"
+    resumed = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            textwrap.dedent("""
+                import asyncio, json
+                from common.db import replay_events
+                from exercises.runtime import run_session
+                class NoRefetch:
+                    def fetch(self, *_):
+                        raise AssertionError('Existing checkpoint must not fetch again')
+                    def analyze(self, *_, **__):
+                        raise AssertionError('Existing checkpoint must not analyze again')
+                async def main():
+                    result = await run_session(
+                        'https://github.com/demo/shop/pull/1', 'worker-crash',
+                        {'choice': 'reject'}, backend=NoRefetch()
+                    )
+                    print(json.dumps({'final_action': result['final_action'],
+                                      'events': await replay_events('worker-crash')}))
+                asyncio.run(main())
+            """),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert resumed.returncode == 0, resumed.stderr
+    data = json.loads(resumed.stdout)
+    assert data["final_action"] == "rejected"
+    assert [event["action"] for event in data["events"]].count("fetch_pr") == 1
+    assert [event["action"] for event in data["events"]].count("analyze") == 1
+    assert (
+        sum(e["action"] == "human_approval" and e["decision"] == "pending" for e in data["events"])
+        == 2
+    )
 
 
 async def test_invalid_human_reply_keeps_session_pending():
@@ -214,7 +359,10 @@ async def test_publication_success_and_failure_are_recorded(monkeypatch):
     result = await run_session(url(), "failure", {"choice": "approve"}, backend=backend)
     assert result["final_action"] == "commit_failed"
     assert "sensitive" not in str(await replay_events("failure"))
-    assert (await replay_events("failure"))[-1]["decision"] == "failed"
+    failure = (await replay_events("failure"))[-1]
+    assert failure["decision"] == "pending"
+    assert "commit_failed" in failure["reason"]
+    assert "RuntimeError" in failure["reason"]
 
 
 def test_provider_exception_text_not_shown_as_success():

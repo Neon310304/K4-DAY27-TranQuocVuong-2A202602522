@@ -19,7 +19,6 @@ from rich.table import Table
 
 from common.db import db_conn, replay_events
 
-
 RISK_COLOR = {"low": "green", "med": "yellow", "high": "red"}
 
 
@@ -32,7 +31,10 @@ async def list_threads() -> None:
                    pr_url,
                    MIN(timestamp)        AS started,
                    MAX(timestamp)        AS last_event,
-                   MAX(risk_level)       AS worst_risk,
+                   CASE MAX(CASE risk_level
+                       WHEN 'high' THEN 3 WHEN 'med' THEN 2 ELSE 1 END)
+                       WHEN 3 THEN 'high' WHEN 2 THEN 'med' ELSE 'low'
+                   END                  AS worst_risk,
                    COUNT(*)              AS events
               FROM audit_events
              GROUP BY thread_id, pr_url

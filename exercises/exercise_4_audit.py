@@ -1,4 +1,8 @@
-"""Exercise 4: durable LangGraph sessions and a structured SQLite decision log."""
+"""Exercise 4: durable sessions and one structured audit row per node execution.
+
+Interrupt nodes log pending before interrupt and the response after it. Resuming
+replays the node, so its pre-interrupt pending row is intentionally repeated.
+"""
 
 from __future__ import annotations
 
@@ -24,7 +28,6 @@ from exercises.review_support import (
 )
 from exercises.runtime import (
     analyze_with,
-    audit_pending_once,
     backend_for,
     load_environment,
     new_thread,
@@ -34,6 +37,7 @@ from exercises.runtime import (
 from exercises.state import RuntimeState
 
 AGENT_ID = "pr-review-agent@v1.0"
+AUDIT_DECISIONS = frozenset({"auto", "approve", "reject", "edit", "escalate", "pending"})
 
 
 async def audit(state, entry: AuditEntry) -> None:
@@ -41,6 +45,8 @@ async def audit(state, entry: AuditEntry) -> None:
 
 
 def entry_for(state, action, decision, started, reason, *, human=False, analysis=None):
+    if decision not in AUDIT_DECISIONS:
+        raise ValueError(f"Unsupported audit decision: {decision}")
     analysis = analysis or state.get("analysis")
     confidence = analysis.confidence if analysis else 0.0
     return AuditEntry(
@@ -48,7 +54,7 @@ def entry_for(state, action, decision, started, reason, *, human=False, analysis
         action=action,
         confidence=confidence,
         risk_level=risk_level_for(confidence) if analysis else "med",
-        reviewer_id=(state.get("reviewer_id") or os.environ.get("GITHUB_USER")) if human else None,
+        reviewer_id=os.environ.get("GITHUB_USER") if human else None,
         decision=decision,
         reason=reason,
         execution_time_ms=max(0, int((time.monotonic() - started) * 1000)),
@@ -92,8 +98,14 @@ async def node_analyze(state, *, backend=None):
 async def node_route(state):
     started = time.monotonic()
     decision = route_for(state["analysis"].confidence)
+    audit_decision = {
+        "auto_approve": "auto",
+        "human_approval": "pending",
+        "escalate": "escalate",
+    }[decision]
     await audit(
-        state, entry_for(state, "route", decision, started, state["analysis"].confidence_reasoning)
+        state,
+        entry_for(state, "route", audit_decision, started, state["analysis"].confidence_reasoning),
     )
     return {"decision": decision}
 
@@ -112,8 +124,7 @@ async def node_human_approval(state):
         started,
         f"Awaiting final review decision; round={state.get('approval_round', 0)}",
     )
-    if not await audit_pending_once(state, pending):
-        await audit(state, pending)
+    await audit(state, pending)
     response = interrupt(payload)
     result = validate_choice(response)
     await audit(
@@ -160,8 +171,7 @@ async def node_escalate(state):
         started,
         "Awaiting reviewer context: " + json.dumps(payload["questions"], ensure_ascii=False),
     )
-    if not await audit_pending_once(state, pending):
-        await audit(state, pending)
+    await audit(state, pending)
     answers = validate_answers(payload, interrupt(payload))
     await audit(
         state,
@@ -228,7 +238,7 @@ async def node_commit(state, *, backend=None):
             }
     action = result["final_action"]
     audit_decision = (
-        "failed"
+        "pending"
         if action == "commit_failed"
         else "auto"
         if automatic

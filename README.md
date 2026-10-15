@@ -104,7 +104,7 @@ uv run python exercises/exercise_1_confidence.py --pr https://github.com/VinUni-
 uv run python exercises/exercise_1_confidence.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/2
 uv run python exercises/exercise_2_hitl.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/1
 uv run python exercises/exercise_3_escalation.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/2
-uv run python -m exercises.exercise_4_audit --pr https://github.com/VinUni-AI20k/PR-Demo/pull/1
+uv run python exercises/exercise_4_audit.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/1
 uv run python -m exercises.exercise_4_audit --pr https://github.com/VinUni-AI20k/PR-Demo/pull/1 --thread EXISTING_THREAD_ID
 uv run python -m audit.replay --list
 uv run python -m audit.replay --thread EXISTING_THREAD_ID
@@ -122,16 +122,20 @@ Exercise 2 có [checkpoint CLI thật](reports/evidence/exercise2_approval.json)
 
 Exercise 3 có [checkpoint CLI thật trên PR #2](reports/evidence/exercise3_live.json): **50% → escalation**, bốn câu hỏi do model sinh, đang chờ reviewer trả lời. [Synthesis qua API thật trong lần kiểm tra riêng](reports/evidence/exercise3_synthesis_probe.json) dùng analysis đã lưu và câu trả lời thử do agent soạn, đạt `previewed_after_escalation`, confidence vẫn **50%**. [Lần chạy offline](reports/evidence/exercise3_offline.json) dùng hoàn toàn fixture. Chưa đăng comment; [câu trả lời đề xuất](reports/drafts/exercise3-answers.md) chưa được coi là phản hồi của reviewer. [Draft kiểm tra](reports/drafts/exercise3-review-probe.md) chứa đủ Q&A nhưng không chứng minh review đã tốt hơn.
 
+Exercise 4 đã có [phiên PR #1 thật và output replay](reports/evidence/exercise4_live.json): confidence **65%**, dừng process tại approval, mở process mới và resume cùng thread bằng reject kiểm thử. Có **7 event**, trong đó hai dòng `human_approval/pending` do node chạy lại; fetch/analyze chỉ một lần, không đăng comment. Reviewer trong lần thử là `automated-exercise4-validation`, không gán phản hồi tự động cho sinh viên.
+
+Audit chỉ ghi `auto`, `approve`, `reject`, `edit`, `escalate`, `pending`. Node route ghi `auto_approve → auto`, `human_approval → pending`, `escalate → escalate`, còn state vẫn giữ tên nhánh. Fetch chưa có analysis dùng confidence 0/risk med; các bước sau lấy risk từ `risk_level_for()`. `reviewer_id` lấy `GITHUB_USER` ở bước có phản hồi người. Lỗi publication giữ `decision=pending`, chi tiết trạng thái `commit_failed` nằm trong reason. Pending trước interrupt được ghi lại khi resume đúng cơ chế của lab; chỉ đọc checkpoint không thêm event.
+
 ## Kiểm thử và evidence
 
 ```bash
 uv run pytest -q
-uv run ruff check exercises app.py scripts tests
-uv run ruff format --check exercises app.py scripts tests
+uv run ruff check exercises app.py scripts tests audit
+uv run ruff format --check exercises app.py scripts tests audit
 uv pip check
 ```
 
-- **39 tests offline đạt**: routing ở biên, pause/resume, payload Exercise 2/3, không đăng trước interrupt, reject/edit không đăng, synthesis không có interrupt thứ hai trong Exercise 3, audit, publication adapter, lỗi publish và smoke test Streamlit.
+- **43 tests offline đạt**: routing, pause/resume, payload, publication, audit contract, risk ranking, worker chết rồi resume bằng process mới và smoke test Streamlit.
 - **8 kiểm tra Chrome đạt**, gồm reload checkpoint và màn hình 375px với reduced motion; không có JavaScript page errors.
 - **API thật**: PR-Demo #1 đạt confidence **0.65 → human_approval**; PR-Demo #2 đạt **0.50 → escalate**, qua YesScale với model request `gpt-4o-mini`.
 - Hai phiên thật dừng chờ reviewer. **Chưa đăng bình luận GitHub trong lần xác minh này**. Tương tác hoàn tất ở demo là phản hồi kiểm thử tổng hợp.
@@ -146,7 +150,7 @@ uv run python -m scripts.run_evidence
 uv run python -m scripts.run_evidence --live
 ```
 
-CI chạy offline, không yêu cầu secrets. Các file được cấp trong `common/` và `audit/` giữ nguyên; giải pháp nằm ở `exercises/`, `app.py` và các module thêm mới.
+CI chạy offline, không yêu cầu secrets. Các file được cấp trong `common/` và `audit/schema.sql` giữ nguyên. `audit/replay.py` được sửa truy vấn `worst_risk`: xếp high > med > low bằng CASE thay cho MAX trên chữ, tránh báo med khi phiên từng có event high. Phần còn lại nằm ở `exercises/`, `app.py` và các module thêm mới.
 
 ## Lưu trữ và giới hạn
 

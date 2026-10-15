@@ -230,16 +230,6 @@ def new_thread() -> str:
     return str(uuid.uuid4())
 
 
-async def audit_pending_once(state: dict, entry) -> bool:
-    """interrupt() replays its node. Avoid repeating its pre-interrupt audit row."""
-    async with db_conn() as conn:
-        async with conn.execute(
-            "SELECT 1 FROM audit_events WHERE thread_id=? AND action=? AND decision=? AND reason=? LIMIT 1",
-            (state["thread_id"], entry.action, entry.decision, entry.reason),
-        ) as cursor:
-            return await cursor.fetchone() is not None
-
-
 def backend_for(state: dict, injected=None):
     return injected or (DemoBackend() if state.get("backend_mode") == "demo" else LiveBackend())
 

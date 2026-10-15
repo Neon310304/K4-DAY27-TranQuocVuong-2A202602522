@@ -25,7 +25,9 @@ def main():
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto(BASE)
         page.wait_for_load_state("networkidle")
-        expect(page.get_by_role("heading", name="A second set of eyes.")).to_be_visible()
+        expect(page.get_by_role("heading", name="A second set of eyes.")).to_be_visible(
+            timeout=30000
+        )
         page.screenshot(path=str(shots / "01-workspace.png"), full_page=True)
         # Inspect real controls after hydration before choosing selectors.
         controls = page.get_by_role("button").all_text_contents()

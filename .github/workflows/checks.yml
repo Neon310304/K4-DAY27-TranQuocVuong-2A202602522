@@ -9,6 +9,6 @@ jobs:
         with:
           python-version: '3.12'
       - run: uv sync --locked --group dev
-      - run: uv run ruff check exercises app.py scripts tests
-      - run: uv run ruff format --check exercises app.py scripts tests
+      - run: uv run ruff check exercises app.py scripts tests audit
+      - run: uv run ruff format --check exercises app.py scripts tests audit
       - run: uv run pytest -q
