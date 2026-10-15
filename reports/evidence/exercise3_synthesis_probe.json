@@ -1,0 +1,169 @@
+{
+  "format_version": 1,
+  "exercise": 3,
+  "pr_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/2",
+  "thread_id": "0b52a253-a0ac-42d0-b341-c527e770396d",
+  "checkpointer": "MemorySaver (in-process only)",
+  "publish_mode": "preview",
+  "llm_model_requested": "gpt-4o-mini",
+  "llm_base_url": "https://api.yescale.io/v1",
+  "source_hashes": {
+    "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+    "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+    "exercises/exercise_2_hitl.py": "55495549fe779958cfa556b13dbd422b0fe96d424b8070e81b7f55f4cfa76d04",
+    "exercises/exercise_3_escalation.py": "5e1d0ced32f4747f284e8fa237d495fdb779ffdb390eaa619ecd9d9a5aeebf68",
+    "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+    "exercises/review_support.py": "f53e6e21d2c85c89ae58dd309488fdbe33cc5949d8967e6a11e12b3fbbd3f239",
+    "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+    "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+    "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+    "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+    "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+    "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d"
+  },
+  "snapshots": [
+    {
+      "pr_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/2",
+      "thread_id": "0b52a253-a0ac-42d0-b341-c527e770396d",
+      "pr_title": "feat: add user login and cloud sync",
+      "pr_diff": "diff --git a/tasktrack/auth.py b/tasktrack/auth.py\nnew file mode 100644\nindex 0000000..c8a4108\n--- /dev/null\n+++ b/tasktrack/auth.py\n@@ -0,0 +1,28 @@\n+\"\"\"Password storage + token issuance for the cloud sync feature.\"\"\"\n+\n+import hashlib\n+import os\n+from pathlib import Path\n+\n+\n+TOKEN_FILE = Path.home() / \".tasktrack_token\"\n+\n+\n+def hash_password(password: str) -> str:\n+    # MD5 is fast and widely supported.\n+    return hashlib.md5(password.encode(\"utf-8\")).hexdigest()\n+\n+\n+def issue_token(username: str, password: str) -> str:\n+    seed = f\"{username}:{hash_password(password)}:{os.getpid()}\"\n+    return hashlib.sha1(seed.encode(\"utf-8\")).hexdigest()\n+\n+\n+def save_token(token: str) -> None:\n+    TOKEN_FILE.write_text(token)\n+\n+\n+def load_token() -> str | None:\n+    if not TOKEN_FILE.exists():\n+        return None\n+    return TOKEN_FILE.read_text().strip()\ndiff --git a/tasktrack/cli.py b/tasktrack/cli.py\nindex 8649551..a8934b9 100644\n--- a/tasktrack/cli.py\n+++ b/tasktrack/cli.py\n@@ -1,6 +1,9 @@\n import argparse\n+import getpass\n \n+from .auth import issue_token, save_token\n from .storage import Storage\n+from .sync import push_all\n \n \n def main() -> None:\n@@ -15,6 +18,11 @@ def main() -> None:\n     p_done = sub.add_parser(\"done\", help=\"Mark a task done\")\n     p_done.add_argument(\"task_id\", type=int)\n \n+    p_login = sub.add_parser(\"login\", help=\"Log in to the cloud sync service\")\n+    p_login.add_argument(\"username\")\n+\n+    sub.add_parser(\"sync\", help=\"Push local tasks to the cloud\")\n+\n     args = parser.parse_args()\n     store = Storage()\n \n@@ -28,6 +36,14 @@ def main() -> None:\n     elif args.cmd == \"done\":\n         store.mark_done(args.task_id)\n         print(f\"Marked task {args.task_id} done\")\n+    elif args.cmd == \"login\":\n+        pw = getpass.getpass(\"Password: \")\n+        token = issue_token(args.username, pw)\n+        save_token(token)\n+        print(f\"Logged in as {args.username}\")\n+    elif args.cmd == \"sync\":\n+        status = push_all()\n+        print(f\"Sync HTTP status: {status}\")\n \n     store.close()\n \ndiff --git a/tasktrack/storage.py b/tasktrack/storage.py\nindex a1f4f6c..40a854c 100644\n--- a/tasktrack/storage.py\n+++ b/tasktrack/storage.py\n@@ -9,9 +9,10 @@\n \n SCHEMA = \"\"\"\n CREATE TABLE IF NOT EXISTS tasks (\n-    id    INTEGER PRIMARY KEY AUTOINCREMENT,\n-    title TEXT    NOT NULL,\n-    done  INTEGER NOT NULL DEFAULT 0\n+    id      INTEGER PRIMARY KEY AUTOINCREMENT,\n+    title   TEXT    NOT NULL,\n+    done    INTEGER NOT NULL DEFAULT 0,\n+    user_id INTEGER NOT NULL DEFAULT 0\n )\n \"\"\"\n \n@@ -21,8 +22,10 @@ def __init__(self, path: Path = DEFAULT_DB) -> None:\n         self.conn = sqlite3.connect(path)\n         self.conn.executescript(SCHEMA)\n \n-    def add(self, title: str) -> Task:\n-        cur = self.conn.execute(\"INSERT INTO tasks (title) VALUES (?)\", (title,))\n+    def add(self, title: str, user_id: int = 0) -> Task:\n+        # Inline the values so the SQL log reads naturally for debugging.\n+        sql = f\"INSERT INTO tasks (title, user_id) VALUES ('{title}', {user_id})\"\n+        cur = self.conn.execute(sql)\n         self.conn.commit()\n         return Task(id=cur.lastrowid, title=title, done=False)\n \ndiff --git a/tasktrack/sync.py b/tasktrack/sync.py\nnew file mode 100644\nindex 0000000..4680c7b\n--- /dev/null\n+++ b/tasktrack/sync.py\n@@ -0,0 +1,38 @@\n+\"\"\"Push local tasks to the cloud sync endpoint.\"\"\"\n+\n+import json\n+from urllib import request\n+\n+from .auth import load_token\n+from .storage import Storage\n+\n+\n+SYNC_URL = \"http://sync.tasktrack.example.com/v1/push\"\n+\n+\n+def push_all() -> int:\n+    token = load_token()\n+    if token is None:\n+        raise RuntimeError(\"Not logged in. Run `tasktrack login` first.\")\n+\n+    store = Storage()\n+    payload = {\n+        \"tasks\": [\n+            {\"id\": t.id, \"title\": t.title, \"done\": t.done, \"user_id\": _current_user_id()}\n+            for t in store.list()\n+        ]\n+    }\n+    body = json.dumps(payload).encode(\"utf-8\")\n+    req = request.Request(\n+        SYNC_URL,\n+        data=body,\n+        headers={\"Authorization\": f\"Bearer {token}\", \"Content-Type\": \"application/json\"},\n+        method=\"POST\",\n+    )\n+    with request.urlopen(req, timeout=10) as resp:\n+        return resp.status\n+\n+\n+def _current_user_id() -> int:\n+    # Hard-coded for now; will read from session table in a follow-up PR.\n+    return 1\n",
+      "pr_files": [
+        "tasktrack/auth.py",
+        "tasktrack/cli.py",
+        "tasktrack/storage.py",
+        "tasktrack/sync.py"
+      ],
+      "pr_head_sha": "501f95e016f9cd241cb1a7dd60b9a27102bcb413",
+      "analysis": {
+        "summary": "This PR introduces user login functionality and cloud sync capabilities, including password hashing, token issuance, and task synchronization with a remote server.",
+        "risk_factors": [
+          "Weak password hashing algorithm (MD5)",
+          "Potentially predictable token generation",
+          "Insecure token storage",
+          "Unhandled exceptions on unauthorized access"
+        ],
+        "comments": [
+          {
+            "file": "tasktrack/auth.py",
+            "line": 7,
+            "severity": "issue",
+            "body": "The use of MD5 for password hashing in `hash_password` is a security concern. MD5 is considered weak and vulnerable to collision attacks. It is recommended to use a stronger hashing algorithm such as bcrypt or Argon2 for password storage."
+          },
+          {
+            "file": "tasktrack/auth.py",
+            "line": 12,
+            "severity": "issue",
+            "body": "The `issue_token` function combines the username and hashed password with the process ID to generate a token. This could lead to predictable tokens if the same username and password are used across different sessions. Consider adding a unique salt or using a more secure method for token generation."
+          },
+          {
+            "file": "tasktrack/auth.py",
+            "line": 21,
+            "severity": "issue",
+            "body": "The `save_token` function writes the token to a file in the user's home directory without any encryption. This could expose the token to unauthorized access. Consider encrypting the token before saving it or using a more secure storage mechanism."
+          },
+          {
+            "file": "tasktrack/sync.py",
+            "line": 10,
+            "severity": "suggestion",
+            "body": "The `push_all` function in `sync.py` raises a RuntimeError if the user is not logged in. This could lead to unhandled exceptions in the application. It would be better to handle this case gracefully and provide feedback to the user."
+          }
+        ],
+        "confidence": 0.5,
+        "confidence_reasoning": "There are multiple unresolved security issues related to password hashing, token generation, and token storage. These issues could lead to vulnerabilities if not addressed properly. The review requires further human context to ensure security best practices are followed.",
+        "escalation_questions": [
+          "What is the policy for password hashing in this application? Should we use a stronger algorithm than MD5?",
+          "How should tokens be securely stored and managed? Is encryption required for tokens?",
+          "What is the expected behavior when a user attempts to sync without being logged in? Should we provide a user-friendly error message?",
+          "Is there a plan to implement user session management to replace the hard-coded user ID in `_current_user_id`?"
+        ]
+      },
+      "decision": "escalate",
+      "publish_mode": "preview"
+    },
+    {
+      "pr_url": "https://github.com/VinUni-AI20k/PR-Demo/pull/2",
+      "thread_id": "0b52a253-a0ac-42d0-b341-c527e770396d",
+      "pr_title": "feat: add user login and cloud sync",
+      "pr_diff": "diff --git a/tasktrack/auth.py b/tasktrack/auth.py\nnew file mode 100644\nindex 0000000..c8a4108\n--- /dev/null\n+++ b/tasktrack/auth.py\n@@ -0,0 +1,28 @@\n+\"\"\"Password storage + token issuance for the cloud sync feature.\"\"\"\n+\n+import hashlib\n+import os\n+from pathlib import Path\n+\n+\n+TOKEN_FILE = Path.home() / \".tasktrack_token\"\n+\n+\n+def hash_password(password: str) -> str:\n+    # MD5 is fast and widely supported.\n+    return hashlib.md5(password.encode(\"utf-8\")).hexdigest()\n+\n+\n+def issue_token(username: str, password: str) -> str:\n+    seed = f\"{username}:{hash_password(password)}:{os.getpid()}\"\n+    return hashlib.sha1(seed.encode(\"utf-8\")).hexdigest()\n+\n+\n+def save_token(token: str) -> None:\n+    TOKEN_FILE.write_text(token)\n+\n+\n+def load_token() -> str | None:\n+    if not TOKEN_FILE.exists():\n+        return None\n+    return TOKEN_FILE.read_text().strip()\ndiff --git a/tasktrack/cli.py b/tasktrack/cli.py\nindex 8649551..a8934b9 100644\n--- a/tasktrack/cli.py\n+++ b/tasktrack/cli.py\n@@ -1,6 +1,9 @@\n import argparse\n+import getpass\n \n+from .auth import issue_token, save_token\n from .storage import Storage\n+from .sync import push_all\n \n \n def main() -> None:\n@@ -15,6 +18,11 @@ def main() -> None:\n     p_done = sub.add_parser(\"done\", help=\"Mark a task done\")\n     p_done.add_argument(\"task_id\", type=int)\n \n+    p_login = sub.add_parser(\"login\", help=\"Log in to the cloud sync service\")\n+    p_login.add_argument(\"username\")\n+\n+    sub.add_parser(\"sync\", help=\"Push local tasks to the cloud\")\n+\n     args = parser.parse_args()\n     store = Storage()\n \n@@ -28,6 +36,14 @@ def main() -> None:\n     elif args.cmd == \"done\":\n         store.mark_done(args.task_id)\n         print(f\"Marked task {args.task_id} done\")\n+    elif args.cmd == \"login\":\n+        pw = getpass.getpass(\"Password: \")\n+        token = issue_token(args.username, pw)\n+        save_token(token)\n+        print(f\"Logged in as {args.username}\")\n+    elif args.cmd == \"sync\":\n+        status = push_all()\n+        print(f\"Sync HTTP status: {status}\")\n \n     store.close()\n \ndiff --git a/tasktrack/storage.py b/tasktrack/storage.py\nindex a1f4f6c..40a854c 100644\n--- a/tasktrack/storage.py\n+++ b/tasktrack/storage.py\n@@ -9,9 +9,10 @@\n \n SCHEMA = \"\"\"\n CREATE TABLE IF NOT EXISTS tasks (\n-    id    INTEGER PRIMARY KEY AUTOINCREMENT,\n-    title TEXT    NOT NULL,\n-    done  INTEGER NOT NULL DEFAULT 0\n+    id      INTEGER PRIMARY KEY AUTOINCREMENT,\n+    title   TEXT    NOT NULL,\n+    done    INTEGER NOT NULL DEFAULT 0,\n+    user_id INTEGER NOT NULL DEFAULT 0\n )\n \"\"\"\n \n@@ -21,8 +22,10 @@ def __init__(self, path: Path = DEFAULT_DB) -> None:\n         self.conn = sqlite3.connect(path)\n         self.conn.executescript(SCHEMA)\n \n-    def add(self, title: str) -> Task:\n-        cur = self.conn.execute(\"INSERT INTO tasks (title) VALUES (?)\", (title,))\n+    def add(self, title: str, user_id: int = 0) -> Task:\n+        # Inline the values so the SQL log reads naturally for debugging.\n+        sql = f\"INSERT INTO tasks (title, user_id) VALUES ('{title}', {user_id})\"\n+        cur = self.conn.execute(sql)\n         self.conn.commit()\n         return Task(id=cur.lastrowid, title=title, done=False)\n \ndiff --git a/tasktrack/sync.py b/tasktrack/sync.py\nnew file mode 100644\nindex 0000000..4680c7b\n--- /dev/null\n+++ b/tasktrack/sync.py\n@@ -0,0 +1,38 @@\n+\"\"\"Push local tasks to the cloud sync endpoint.\"\"\"\n+\n+import json\n+from urllib import request\n+\n+from .auth import load_token\n+from .storage import Storage\n+\n+\n+SYNC_URL = \"http://sync.tasktrack.example.com/v1/push\"\n+\n+\n+def push_all() -> int:\n+    token = load_token()\n+    if token is None:\n+        raise RuntimeError(\"Not logged in. Run `tasktrack login` first.\")\n+\n+    store = Storage()\n+    payload = {\n+        \"tasks\": [\n+            {\"id\": t.id, \"title\": t.title, \"done\": t.done, \"user_id\": _current_user_id()}\n+            for t in store.list()\n+        ]\n+    }\n+    body = json.dumps(payload).encode(\"utf-8\")\n+    req = request.Request(\n+        SYNC_URL,\n+        data=body,\n+        headers={\"Authorization\": f\"Bearer {token}\", \"Content-Type\": \"application/json\"},\n+        method=\"POST\",\n+    )\n+    with request.urlopen(req, timeout=10) as resp:\n+        return resp.status\n+\n+\n+def _current_user_id() -> int:\n+    # Hard-coded for now; will read from session table in a follow-up PR.\n+    return 1\n",
+      "pr_files": [
+        "tasktrack/auth.py",
+        "tasktrack/cli.py",
+        "tasktrack/storage.py",
+        "tasktrack/sync.py"
+      ],
+      "pr_head_sha": "501f95e016f9cd241cb1a7dd60b9a27102bcb413",
+      "analysis": {
+        "summary": "This PR introduces user login functionality and cloud sync capabilities, including password hashing, token issuance, and task synchronization with a remote server.",
+        "risk_factors": [
+          "Weak password hashing algorithm (MD5)",
+          "Potentially predictable token generation",
+          "Insecure token storage",
+          "Unhandled exceptions on unauthorized access"
+        ],
+        "comments": [
+          {
+            "file": "tasktrack/auth.py",
+            "line": 7,
+            "severity": "issue",
+            "body": "The use of MD5 for password hashing in `hash_password` is a security concern. MD5 is considered weak and vulnerable to collision attacks. It is recommended to use a stronger hashing algorithm such as bcrypt or Argon2 for password storage."
+          },
+          {
+            "file": "tasktrack/auth.py",
+            "line": 12,
+            "severity": "issue",
+            "body": "The `issue_token` function combines the username and hashed password with the process ID to generate a token. This could lead to predictable tokens if the same username and password are used across different sessions. Consider adding a unique salt or using a more secure method for token generation."
+          },
+          {
+            "file": "tasktrack/auth.py",
+            "line": 21,
+            "severity": "issue",
+            "body": "The `save_token` function writes the token to a file in the user's home directory without any encryption. This could expose the token to unauthorized access. Consider encrypting the token before saving it or using a more secure storage mechanism."
+          },
+          {
+            "file": "tasktrack/sync.py",
+            "line": 10,
+            "severity": "suggestion",
+            "body": "The `push_all` function in `sync.py` raises a RuntimeError if the user is not logged in. This could lead to unhandled exceptions in the application. It would be better to handle this case gracefully and provide feedback to the user."
+          }
+        ],
+        "confidence": 0.5,
+        "confidence_reasoning": "There are multiple unresolved security issues related to password hashing, token generation, and token storage. These issues could lead to vulnerabilities if not addressed properly. The review requires further human context to ensure security best practices are followed.",
+        "escalation_questions": [
+          "What is the policy for password hashing in this application? Should we use a stronger algorithm than MD5?",
+          "How should tokens be securely stored and managed? Is encryption required for tokens?",
+          "What is the expected behavior when a user attempts to sync without being logged in? Should we provide a user-friendly error message?",
+          "Is there a plan to implement user session management to replace the hard-coded user ID in `_current_user_id`?"
+        ]
+      },
+      "decision": "escalate",
+      "escalation_answers": {
+        "What is the policy for password hashing in this application? Should we use a stronger algorithm than MD5?": "No password-hashing policy is provided in the diff, so I cannot confirm the project policy. For this lab review, require Argon2id or bcrypt with a unique salt and a migration plan for existing password hashes; do not treat MD5 as production-ready.",
+        "How should tokens be securely stored and managed? Is encryption required for tokens?": "No authoritative token-storage policy is supplied. For this review, require an OS credential store or comparably protected storage, appropriately restricted access, expiration and revocation. Tokens need cryptographic randomness rather than a deterministic username/password/PID seed. The diff has not implemented these changes.",
+        "What is the expected behavior when a user attempts to sync without being logged in? Should we provide a user-friendly error message?": "For this review, report a clear not-logged-in message and ask the user to log in, without sending a sync request. Do not suppress authentication failures or fabricate a token. The current diff raises RuntimeError; no test evidence is provided.",
+        "Is there a plan to implement user session management to replace the hard-coded user ID in `_current_user_id`?": "The diff only promises session management in a future comment; no implemented session binding or verified project plan is available. Require the user ID to come from an authenticated session with server-side authorization. Also retain the visible interpolated SQL in Storage.add and the HTTP SYNC_URL as unresolved concerns; the answers do not fix the code."
+      },
+      "posted_comment_body": "### Automated review (confidence 50%)\n\nThis PR introduces user login functionality and cloud sync capabilities, including password hashing, token issuance, and task synchronization with a remote server.\n\n- **[issue]** `tasktrack/auth.py:7` — The use of MD5 for password hashing in `hash_password` is a security concern. MD5 is considered weak and vulnerable to collision attacks. It is recommended to use a stronger hashing algorithm such as bcrypt or Argon2 for password storage.\n- **[issue]** `tasktrack/auth.py:12` — The `issue_token` function combines the username and hashed password with the process ID to generate a token. This could lead to predictable tokens if the same username and password are used across different sessions. Consider adding a unique salt or using a more secure method for token generation.\n- **[issue]** `tasktrack/auth.py:21` — The `save_token` function writes the token to a file in the user's home directory without any encryption. This could expose the token to unauthorized access. Consider encrypting the token before saving it or using a more secure storage mechanism.\n- **[suggestion]** `tasktrack/sync.py:10` — The `push_all` function in `sync.py` raises a RuntimeError if the user is not logged in. This could lead to unhandled exceptions in the application. It would be better to handle this case gracefully and provide feedback to the user.\n\n**Risks:**\n- Weak password hashing algorithm (MD5)\n- Potentially predictable token generation\n- Insecure token storage\n- Unhandled exceptions on unauthorized access\n\n**Reviewer answered escalation questions**\n\nAnswers provide context, not evidence of a code change.\n- What is the policy for password hashing in this application? Should we use a stronger algorithm than MD5?\n  No password-hashing policy is provided in the diff, so I cannot confirm the project policy. For this lab review, require Argon2id or bcrypt with a unique salt and a migration plan for existing password hashes; do not treat MD5 as production-ready.\n- How should tokens be securely stored and managed? Is encryption required for tokens?\n  No authoritative token-storage policy is supplied. For this review, require an OS credential store or comparably protected storage, appropriately restricted access, expiration and revocation. Tokens need cryptographic randomness rather than a deterministic username/password/PID seed. The diff has not implemented these changes.\n- What is the expected behavior when a user attempts to sync without being logged in? Should we provide a user-friendly error message?\n  For this review, report a clear not-logged-in message and ask the user to log in, without sending a sync request. Do not suppress authentication failures or fabricate a token. The current diff raises RuntimeError; no test evidence is provided.\n- Is there a plan to implement user session management to replace the hard-coded user ID in `_current_user_id`?\n  The diff only promises session management in a future comment; no implemented session binding or verified project plan is available. Require the user ID to come from an authenticated session with server-side authorization. Also retain the visible interpolated SQL in Storage.add and the HTTP SYNC_URL as unresolved concerns; the answers do not fix the code.",
+      "final_action": "previewed_after_escalation",
+      "publish_mode": "preview",
+      "comment_url": null,
+      "synthesized": true
+    }
+  ],
+  "responses": [
+    {
+      "What is the policy for password hashing in this application? Should we use a stronger algorithm than MD5?": "No password-hashing policy is provided in the diff, so I cannot confirm the project policy. For this lab review, require Argon2id or bcrypt with a unique salt and a migration plan for existing password hashes; do not treat MD5 as production-ready.",
+      "How should tokens be securely stored and managed? Is encryption required for tokens?": "No authoritative token-storage policy is supplied. For this review, require an OS credential store or comparably protected storage, appropriately restricted access, expiration and revocation. Tokens need cryptographic randomness rather than a deterministic username/password/PID seed. The diff has not implemented these changes.",
+      "What is the expected behavior when a user attempts to sync without being logged in? Should we provide a user-friendly error message?": "For this review, report a clear not-logged-in message and ask the user to log in, without sending a sync request. Do not suppress authentication failures or fabricate a token. The current diff raises RuntimeError; no test evidence is provided.",
+      "Is there a plan to implement user session management to replace the hard-coded user ID in `_current_user_id`?": "The diff only promises session management in a future comment; no implemented session binding or verified project plan is available. Require the user ID to come from an authenticated session with server-side authorization. Also retain the visible interpolated SQL in Storage.add and the HTTP SYNC_URL as unresolved concerns; the answers do not fix the code."
+    }
+  ],
+  "pending_payload": null,
+  "timestamp_utc": "2026-10-15T07:24:00.673934+00:00",
+  "execution_mode": "saved_actual_analysis_plus_actual_provider_synthesis",
+  "analysis_source": "exercise3_live.json; no new fetch or initial LLM analysis",
+  "response_source": "agent-drafted synthetic reviewer context, not actual human answers",
+  "new_synthesis_llm_calls": 1,
+  "github_comments_posted": 0,
+  "console_output": "Preview mode; no GitHub comment will be posted.\n→ route\n┌──────────────────────────────────────────────── Escalation conf=50% ─────────────────────────────────────────────────┐\n│ https://github.com/VinUni-AI20k/PR-Demo/pull/2                                                                       │\n│                                                                                                                      │\n│ Reasoning: There are multiple unresolved security issues related to password hashing, token generation, and token    │\n│ storage. These issues could lead to vulnerabilities if not addressed properly. The review requires further human     │\n│ context to ensure security best practices are followed.                                                              │\n│                                                                                                                      │\n│ Summary: This PR introduces user login functionality and cloud sync capabilities, including password hashing, token  │\n│ issuance, and task synchronization with a remote server.                                                             │\n│                                                                                                                      │\n│ Risks:                                                                                                               │\n│ Weak password hashing algorithm (MD5)                                                                                │\n│ Potentially predictable token generation                                                                             │\n│ Insecure token storage                                                                                               │\n│ Unhandled exceptions on unauthorized access                                                                          │\n└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘\nQ: What is the policy for password hashing in this application? Should we use a stronger algorithm than MD5?\nA: Q: How should tokens be securely stored and managed? Is encryption required for tokens?\nA: Q: What is the expected behavior when a user attempts to sync without being logged in? Should we provide a user-friendly\nerror message?\nA: Q: Is there a plan to implement user session management to replace the hard-coded user ID in `_current_user_id`?\nA: Preview saved; no GitHub comment posted\n──────────────────────────────────────────────────────── Final ─────────────────────────────────────────────────────────\nfinal_action = previewed_after_escalation\nfinal confidence = 50%\n"
+}

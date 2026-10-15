@@ -11,7 +11,14 @@ from common.schemas import PRAnalysis
 from exercises import exercise_1_confidence as ex1
 from exercises import exercise_2_hitl as ex2
 from exercises import exercise_3_escalation as ex3
-from exercises.review_support import DemoBackend, analysis_messages, route_for, validate_pr_url
+from exercises.review_support import (
+    DemoBackend,
+    analysis_messages,
+    escalation_payload,
+    render_comment_body,
+    route_for,
+    validate_pr_url,
+)
 from exercises.runtime import load_session, publish_review, run_session
 
 
@@ -323,18 +330,96 @@ def test_exercise2_payload_and_approve_publish_after_interrupt_only(monkeypatch)
     assert not graph.get_state(cfg).next
 
 
-def test_exercise3_refines_then_waits_for_confirmation(monkeypatch):
+@pytest.mark.parametrize("mode", ["live", "preview"])
+def test_exercise3_refines_then_commits_without_second_interrupt(monkeypatch, mode):
     patch_early_exercises(monkeypatch)
+    posts = []
+
+    def publication(state):
+        posts.append(dict(state))
+        return {
+            "final_action": "committed" if mode == "live" else "previewed",
+            "posted_comment_body": render_comment_body(state),
+        }
+
+    monkeypatch.setattr(ex3, "publish_review", publication)
     graph = ex3.build_graph()
     cfg = {"configurable": {"thread_id": "qa-memory"}}
-    result = graph.invoke({"pr_url": url(2)}, cfg)
+    result = graph.invoke({"pr_url": url(2), "publish_mode": mode}, cfg)
     payload = result["__interrupt__"][0].value
-    result = graph.invoke(
-        Command(resume={q: "Security policy applies" for q in payload["questions"]}), cfg
-    )
+    assert payload["kind"] == "escalation"
+    assert payload["pr_url"] == url(2)
+    assert payload["confidence"] == result["analysis"].confidence
+    assert payload["confidence_reasoning"] == result["analysis"].confidence_reasoning
+    assert payload["summary"] == result["analysis"].summary
+    assert payload["risk_factors"] == result["analysis"].risk_factors
+    assert payload["questions"] == result["analysis"].escalation_questions
+    assert 2 <= len(payload["questions"]) <= 4
+    assert not posts
+    answers = {
+        q: "Security policy applies; the code has not been fixed." for q in payload["questions"]
+    }
+    result = graph.invoke(Command(resume=answers), cfg)
+    expected = "committed_after_escalation" if mode == "live" else "previewed_after_escalation"
+    assert result["final_action"] == expected
+    assert result["analysis"].confidence == 0.55  # No forced confidence increase or rerouting.
+    assert result["escalation_answers"] == answers
+    assert not result.get("__interrupt__")
+    assert not graph.get_state(cfg).next
+    assert len(posts) == 1
+    assert "Reviewer answered escalation questions" in result["posted_comment_body"]
+    for question, answer in answers.items():
+        assert question in result["posted_comment_body"]
+        assert answer in result["posted_comment_body"]
+
+
+@pytest.mark.parametrize("choice", ["approve", "reject", "edit"])
+def test_exercise3_medium_confidence_still_requires_approve(monkeypatch, choice):
+    patch_early_exercises(monkeypatch)
+    posted = []
+
+    def publish(state):
+        posted.append(dict(state))
+        return {"final_action": "committed"}
+
+    monkeypatch.setattr(ex3, "publish_review", publish)
+    graph = ex3.build_graph()
+    cfg = {"configurable": {"thread_id": "medium-" + choice}}
+    result = graph.invoke({"pr_url": url(), "publish_mode": "live"}, cfg)
     assert result["__interrupt__"][0].value["kind"] == "approval_request"
-    result = graph.invoke(Command(resume={"choice": "reject"}), cfg)
-    assert result["final_action"] == "rejected"
+    assert not posted
+    result = graph.invoke(Command(resume={"choice": choice}), cfg)
+    assert result["final_action"] == ("committed" if choice == "approve" else "rejected")
+    assert len(posted) == (1 if choice == "approve" else 0)
+
+
+def test_exercise3_incomplete_answers_do_not_synthesize_or_publish(monkeypatch):
+    patch_early_exercises(monkeypatch)
+    posted = []
+    monkeypatch.setattr(ex3, "publish_review", lambda state: posted.append(state))
+    graph = ex3.build_graph()
+    cfg = {"configurable": {"thread_id": "missing-answers"}}
+    result = graph.invoke({"pr_url": url(2)}, cfg)
+    questions = result["__interrupt__"][0].value["questions"]
+    with pytest.raises(ValueError, match="Answer every escalation question"):
+        graph.invoke(Command(resume={questions[0]: "Only one answer"}), cfg)
+    assert not posted
+    assert not graph.get_state(cfg).values.get("synthesized")
+
+
+def test_escalation_fallback_provides_two_questions_without_hiding_missing_llm_output():
+    state = {
+        "pr_url": url(2),
+        "pr_diff": "changed code",
+        "pr_files": ["storage.py"],
+        "analysis": PRAnalysis(
+            summary="Missing context", confidence=0.4, confidence_reasoning="Policy unspecified"
+        ),
+    }
+    assert state["analysis"].escalation_questions == []
+    payload = escalation_payload(state)
+    assert len(payload["questions"]) == 2
+    assert "storage.py" in payload["questions"][0]
 
 
 def test_streamlit_review_and_reject():

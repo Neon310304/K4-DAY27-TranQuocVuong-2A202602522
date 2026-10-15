@@ -8,7 +8,7 @@ Repo public đã chuẩn hoá tên thành [K4-DAY27-TranQuocVuong-2A202602522](h
 
 ## Kết quả
 
-Hoàn thiện năm bài tập, UI Streamlit, routing, HITL, escalation và audit SQLite. Bộ **33 tests offline đạt**. **8 kiểm tra trình duyệt Chrome đạt**, không có page error. Dependencies tương thích theo `uv pip check`.
+Hoàn thiện năm bài tập, UI Streamlit, routing, HITL, escalation và audit SQLite. Bộ **39 tests offline đạt**. **8 kiểm tra trình duyệt Chrome đạt**, không có page error. Dependencies tương thích theo `uv pip check`.
 
 Các kết quả máy đọc được nằm trong [evidence](evidence/), ảnh nằm trong [screenshots](../screenshots/README.md). Tests dùng LangGraph và SQLite thật cùng backend giả; không được coi là API execution.
 
@@ -37,13 +37,25 @@ Hai phiên live được mở lại trong process Streamlit/Chrome khác từ SQ
 
 Giữ lại cả hai lần thử khác: [pipe lỗi nhập liệu/EOF](evidence/exercise2_reject_input_failure.json) sau khi model trả 58%, và [lần gọi trả 57%](evidence/exercise2_low_confidence.json) đi đúng nhánh `pending_escalation`. Các lần này không chứng minh reject thành công. Ngưỡng không thay đổi; không ép model đạt kết quả định sẵn. [exercise2_checks.json](evidence/exercise2_checks.json) liên kết source và phạm vi kiểm chứng.
 
+## Kiểm chứng riêng Exercise 3
+
+[Lệnh CLI thật trên PR #2](evidence/exercise3_live.json) lấy bốn file, head `501f95e`, gọi YesScale với model request `gpt-4o-mini` và trả confidence **50% → escalate**. Panel vàng `Escalation conf=50%` hiển thị summary, reasoning và risk factors; model sinh bốn câu hỏi về hash mật khẩu, lưu token, sync khi chưa đăng nhập và thay `_current_user_id` hard-code bằng session. Đây không phải hai câu fallback. Ba câu dùng mô tả vấn đề, câu cuối nêu function cụ thể; chất lượng tham chiếu file còn có thể cải thiện.
+
+Process đang giữ `MemorySaver`, chờ reviewer trả lời [bản đề xuất](drafts/exercise3-answers.md). Phiên đó dùng `--preview` và chưa resume. Không tự gán ý kiến agent thành chính sách của tác giả PR. Analysis bỏ sót SQL nội suy và URL HTTP dù diff thể hiện hai điểm đó; bộ câu trả lời đề xuất giữ các finding này chưa giải quyết.
+
+Một [lần kiểm tra synthesis qua API thật riêng](evidence/exercise3_synthesis_probe.json) phát lại nguyên PR/analysis ban đầu đã lưu, tự nhập bốn câu trả lời thử do agent soạn, rồi gọi YesScale một lần mới trong `node_synthesize`. Kết quả `previewed_after_escalation`, confidence **0.50 → 0.50**, [draft có đủ Q&A](drafts/exercise3-review-probe.md). Các trường analysis trả về giống bản ban đầu: chỉ có Q&A được phần render nối vào comment; không có bằng chứng synthesis cải thiện finding. Đây là giới hạn quan sát được của model trong lần chạy này. Không gọi đây là phản hồi của reviewer thật, không đăng GitHub và chưa đạt checkpoint `committed_after_escalation` thật.
+
+[Lần chạy offline riêng](evidence/exercise3_offline.json) dùng fixture và hai câu trả lời tổng hợp: interrupt → resume cùng thread → synthesis → `previewed_after_escalation`, confidence 0.42 → 0.55. Synthesis không bị buộc vượt ngưỡng. Tests dùng publication giả để xác minh `committed_after_escalation`, không có POST trước Q&A, đủ dữ liệu mới tiếp tục, và nhánh confidence trung bình vẫn chỉ đăng khi approve. Tổng bộ tests: **39 passed**; không gọi các kết quả giả lập này là xác nhận đăng comment thật.
+
 ## HITL và phiên bền
 
 `interrupt()` trả payload chứa diff, summary, reasoning, comments hoặc câu hỏi. Resume dùng đúng thread với `Command(resume=...)`. `AsyncSqliteSaver` được mở/đóng trong cùng event loop cho từng thao tác; mở thread đã có chỉ đọc checkpoint hoặc tiếp tục chỗ đang dừng, không gửi input khởi tạo lần nữa.
 
 Exercise 2 dùng `MemorySaver`: panel chứa đủ contract và 2.000 ký tự đầu diff; `while` resume cùng thread. `approve` mới gọi publication ở node commit; `reject` và `edit` đều trả `rejected`. Không đặt POST trước interrupt. Các tests kiểm tra không POST lúc dừng và đúng một POST giả lập sau approve. Bộ nhớ này mất khi process tắt.
 
-Exercise 3–5 mở rộng Edit: yêu cầu nội dung mới, lưu thành draft rồi xác nhận. Reject không gọi publication adapter. Escalation lấy Q&A làm ngữ cảnh, giữ nguyên finding chưa giải quyết, rồi yêu cầu final confirm. Confidence sau synthesize có thể thấp hơn; code không tăng điểm giả.
+Exercise 3 nối `escalate → synthesize → commit` theo đề; không hỏi approve/reject lần hai sau Q&A. Khi đăng thật, `final_action = committed_after_escalation`; preview trả `previewed_after_escalation`. Trước khi có đủ câu trả lời không gọi synthesis hoặc publication. Payload fallback có hai câu khi model không sinh câu hỏi, nhưng không ghi đè trường `escalation_questions` rỗng của model.
+
+Exercise 4–5 mở rộng Edit: yêu cầu nội dung mới, lưu thành draft rồi xác nhận. Reject không gọi publication adapter. Escalation lấy Q&A làm ngữ cảnh, giữ nguyên finding chưa giải quyết, rồi yêu cầu final confirm. Confidence sau synthesize có thể thấp hơn; code không tăng điểm giả.
 
 Audit ghi fetch, analyze, route, automatic decision, pending HITL, reviewer response, synthesize/edit và commit/reject/failure. `reviewer_id` chỉ có ở sự kiện reviewer; nó là attribution cấu hình, không phải identity được xác thực. Thời gian `execution_time_ms` đo bằng monotonic cho lần chạy node, không đại diện tổng thời gian người duyệt chờ. Pending event được kiểm tra để không lặp khi node interrupt chạy lại trong luồng tuần tự.
 
@@ -52,7 +64,7 @@ Audit ghi fetch, analyze, route, automatic decision, pending HITL, reviewer resp
 - Biên 0.58 và 0.73 được kiểm thử cùng điểm ngay dưới ngưỡng.
 - Đóng/mở saver và graph mới vẫn khôi phục payload; không fetch/analyze thêm khi reload.
 - Edit hiển thị đúng nội dung đã sửa, bắt xác nhận; reject không gửi comment.
-- Escalation từ chối câu trả lời trống/thiếu và không tự commit sau synthesize.
+- Escalation từ chối câu trả lời trống/thiếu. Exercise 3 tự commit sau synthesize theo contract; Exercise 4–5 yêu cầu final confirm.
 - Stub publication xác minh POST đúng một lần khi resume bình thường; lỗi publication được log `failed`, không hiện success và không ghi nguyên exception có thể chứa secrets.
 - Chrome thử approval, edit/confirm, escalation/validation/refine/reject, automatic preview, reload, hai live checkpoints và viewport 375px/reduced motion.
 
@@ -62,8 +74,8 @@ Demo dùng fixture rõ ràng; các câu trả lời trong `offline_runs.json` l�
 
 1. Ngưỡng dùng hằng số 0.73/0.58, sửa sự lệch giữa TODO cũ và README.
 2. Dùng SQLite theo starter, chưa làm PostgreSQL; giữ `common/` và `audit/` nguyên bản.
-3. Thêm xác nhận cuối sau synthesis, đúng yêu cầu UI Exercise 5.
-4. UI và CLI Exercise 3/4 mặc định preview; publication cần checkbox hoặc `--publish`. CLI Exercise 2 mặc định live theo checkpoint của đề, có `--preview` để thử cục bộ. Không gán draft thành kết quả đã đăng.
+3. Thêm xác nhận cuối sau synthesis trong Exercise 4–5, đúng yêu cầu UI Exercise 5; Exercise 3 giữ đường thẳng từ synthesis tới commit.
+4. UI và CLI Exercise 4 mặc định preview; publication cần checkbox hoặc `--publish`. CLI Exercise 2/3 mặc định live theo checkpoint của đề, có `--preview` để thử cục bộ. Không gán draft thành kết quả đã đăng.
 5. Hỗ trợ YesScale qua tên biến OpenAI-compatible mà không sửa LLM factory được cấp.
 6. Sidebar quy đổi mức rủi ro thành số trước `MAX`; tránh so sánh chữ `high/low/med` theo alphabet.
 

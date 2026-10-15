@@ -57,7 +57,7 @@ OPENAI_MODEL=gpt-4o-mini
 
 `GITHUB_TOKEN` cần quyền `public_repo` để đăng bình luận ở repo public. Nếu Git Credential Manager đã đăng nhập GitHub, app có thể lấy credential vào bộ nhớ, không in hoặc ghi lại token. `GITHUB_USER` là attribution do người chạy cấu hình, không phải cơ chế xác thực reviewer của production.
 
-Chọn **Live GitHub + LLM** và nhập URL PR. **UI và CLI Exercise 3/4 mặc định preview**: đọc PR thật, gọi model thật, giữ draft. Để thực sự đăng bình luận, bật **Publish approved reviews to GitHub** trước khi bắt đầu phiên, hoặc dùng `--publish` ở CLI. **CLI Exercise 2 mặc định đăng thật sau approve**, đúng checkpoint của đề; dùng `--preview` nếu chỉ muốn lưu draft. Nhánh automatic có thể đăng ngay khi chế độ publish được bật. Đây là bình luận thảo luận PR, không phải formal GitHub Approve hay merge code.
+Chọn **Live GitHub + LLM** và nhập URL PR. **UI và CLI Exercise 4 mặc định preview**: đọc PR thật, gọi model thật, giữ draft. Để thực sự đăng bình luận, bật **Publish approved reviews to GitHub** trước khi bắt đầu phiên, hoặc dùng `--publish` ở CLI. **CLI Exercise 2/3 mặc định live**, đúng checkpoint của đề; dùng `--preview` nếu chỉ muốn lưu draft. Exercise 2 đăng sau approve; Exercise 3 đăng sau khi trả lời hết câu hỏi escalation và synthesis hoàn tất. Nhánh automatic có thể đăng ngay khi chế độ publish được bật. Đây là bình luận thảo luận PR, không phải formal GitHub Approve hay merge code.
 
 ## Năm bài tập đã hoàn thiện
 
@@ -65,11 +65,11 @@ Chọn **Live GitHub + LLM** và nhập URL PR. **UI và CLI Exercise 3/4 mặc 
 |---|---|---|
 | 1 | `exercises/exercise_1_confidence.py` | Fetch PR, `with_structured_output(PRAnalysis)`, routing đủ ba nhánh |
 | 2 | `exercises/exercise_2_hitl.py` | `MemorySaver`, `interrupt()`, resume cùng thread; approve đăng, reject/edit bỏ qua |
-| 3 | `exercises/exercise_3_escalation.py` | Câu hỏi cụ thể, Q&A, phân tích lại, xác nhận review đã tinh chỉnh |
+| 3 | `exercises/exercise_3_escalation.py` | Câu hỏi cụ thể, Q&A, phân tích lại rồi commit, không có interrupt duyệt lần hai |
 | 4 | `exercises/exercise_4_audit.py` | `AsyncSqliteSaver`, audit từng bước, resume cùng thread sau khi tắt chương trình |
 | 5 | `app.py` | UI Streamlit, phiên gần đây, reload bằng URL thread, audit và tải draft |
 
-Luồng đầy đủ của Exercise 3–5:
+Luồng đầy đủ của Exercise 4–5:
 
 ```mermaid
 flowchart TD
@@ -91,7 +91,9 @@ Ngưỡng chính xác lấy từ `common/schemas.py`: **`>= 0.73`**, **`0.58 <= 
 
 Trong Exercise 2, `human_approval → commit`: chỉ `approve` đăng; cả `reject` và `edit` kết thúc `rejected`, không viết lại review. Panel **Approval request** hiển thị confidence, reasoning, summary, comments và đúng 2.000 ký tự đầu của diff. Node interrupt không đăng comment; vòng `while` resume dùng lại cùng `cfg` và `thread_id`.
 
-Trong Exercise 3–5, Edit lưu **toàn bộ nội dung review thay thế** rồi yêu cầu xác nhận lần nữa. Escalation luôn được duyệt lại sau synthesize; câu trả lời của reviewer không tự xoá lỗi trong code. Đây là phần bổ sung so với đường `synthesize → commit` của starter để đáp ứng yêu cầu xác nhận cuối trong Exercise 5.
+Exercise 3 giữ luồng `escalate → synthesize → commit` theo đề. Model sinh 2–4 câu hỏi theo file/đoạn code; thiếu câu hỏi thì payload dự phòng có hai câu. Sau khi trả lời hết, model nhận diff gốc, analysis ban đầu và Q&A để sinh `PRAnalysis` mới. Comment có mục **Reviewer answered escalation questions**. Kết quả là `committed_after_escalation` khi đăng thật hoặc `previewed_after_escalation` trong preview; không tự nâng confidence và không định tuyến lại sau synthesis. Nhánh approval vẫn chỉ đăng khi approve.
+
+Trong Exercise 4–5, Edit lưu **toàn bộ nội dung review thay thế** rồi yêu cầu xác nhận lần nữa. Escalation được duyệt lại sau synthesize; câu trả lời của reviewer không tự xoá lỗi trong code. Đây là phần bổ sung để đáp ứng yêu cầu xác nhận cuối trong Exercise 5.
 
 ## CLI và replay
 
@@ -101,7 +103,7 @@ Chạy từ gốc repo; cú pháp module bảo đảm import hoạt động trê
 uv run python exercises/exercise_1_confidence.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/1
 uv run python exercises/exercise_1_confidence.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/2
 uv run python exercises/exercise_2_hitl.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/1
-uv run python -m exercises.exercise_3_escalation --pr https://github.com/VinUni-AI20k/PR-Demo/pull/2
+uv run python exercises/exercise_3_escalation.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/2
 uv run python -m exercises.exercise_4_audit --pr https://github.com/VinUni-AI20k/PR-Demo/pull/1
 uv run python -m exercises.exercise_4_audit --pr https://github.com/VinUni-AI20k/PR-Demo/pull/1 --thread EXISTING_THREAD_ID
 uv run python -m audit.replay --list
@@ -112,9 +114,13 @@ uv run python -m audit.replay --thread EXISTING_THREAD_ID
 
 Exercise 2 hỗ trợ `--evidence reports/evidence/my-exercise2.json` để lưu snapshots và payload khi dừng/tiếp tục. Thêm `--preview` để approve chỉ tạo draft trong kết quả trả về; không ghi SQLite hoặc đăng GitHub.
 
+Exercise 3 cũng hỗ trợ `--preview --evidence reports/evidence/my-exercise3.json`; terminal có panel vàng `Escalation conf=...`, hỏi lần lượt `Q:` / `A:`, rồi in `final_action` và `final confidence`. Trả lời câu hỏi trong chế độ live sẽ đi thẳng đến đăng review sau synthesis.
+
 Exercise 1 đã được chạy riêng bằng hai lệnh trực tiếp trong đề: PR #1 in `✓ HUMAN APPROVAL`, `confidence = 65%`, `action = pending_human_approval`; PR #2 in `✓ ESCALATE`, `confidence = 55%`, `action = pending_escalation`. [Output CLI thật](reports/evidence/exercise1_runs.json) tách riêng với hai checkpoint UI đã chạy trước đó; confidence có thể khác giữa các lần gọi. Không đổi ngưỡng và không đăng comment ở Exercise 1.
 
 Exercise 2 có [checkpoint CLI thật](reports/evidence/exercise2_approval.json) với confidence **58%**, đang chờ người dùng duyệt [review cụ thể](reports/drafts/exercise2-review.md). [Reject replay](reports/evidence/exercise2_reject.json) dùng lại analysis đã lưu, trả `rejected` và không đăng comment; phản hồi đó do script kiểm thử nhập. Checkpoint đăng comment thật vẫn chờ duyệt; xem [phạm vi kiểm chứng](reports/evidence/exercise2_checks.json).
+
+Exercise 3 có [checkpoint CLI thật trên PR #2](reports/evidence/exercise3_live.json): **50% → escalation**, bốn câu hỏi do model sinh, đang chờ reviewer trả lời. [Synthesis qua API thật trong lần kiểm tra riêng](reports/evidence/exercise3_synthesis_probe.json) dùng analysis đã lưu và câu trả lời thử do agent soạn, đạt `previewed_after_escalation`, confidence vẫn **50%**. [Lần chạy offline](reports/evidence/exercise3_offline.json) dùng hoàn toàn fixture. Chưa đăng comment; [câu trả lời đề xuất](reports/drafts/exercise3-answers.md) chưa được coi là phản hồi của reviewer. [Draft kiểm tra](reports/drafts/exercise3-review-probe.md) chứa đủ Q&A nhưng không chứng minh review đã tốt hơn.
 
 ## Kiểm thử và evidence
 
@@ -125,7 +131,7 @@ uv run ruff format --check exercises app.py scripts tests
 uv pip check
 ```
 
-- **33 tests offline đạt**: routing ở biên, pause/resume, payload Exercise 2, không đăng trước interrupt, reject/edit không đăng, escalation, audit, publication adapter, lỗi publish và smoke test Streamlit.
+- **39 tests offline đạt**: routing ở biên, pause/resume, payload Exercise 2/3, không đăng trước interrupt, reject/edit không đăng, synthesis không có interrupt thứ hai trong Exercise 3, audit, publication adapter, lỗi publish và smoke test Streamlit.
 - **8 kiểm tra Chrome đạt**, gồm reload checkpoint và màn hình 375px với reduced motion; không có JavaScript page errors.
 - **API thật**: PR-Demo #1 đạt confidence **0.65 → human_approval**; PR-Demo #2 đạt **0.50 → escalate**, qua YesScale với model request `gpt-4o-mini`.
 - Hai phiên thật dừng chờ reviewer. **Chưa đăng bình luận GitHub trong lần xác minh này**. Tương tác hoàn tất ở demo là phản hồi kiểm thử tổng hợp.

@@ -1,0 +1,109 @@
+{
+  "timestamp_utc": "2026-10-15T07:23:04.529722+00:00",
+  "exercise": 3,
+  "source_hashes": {
+    "app.py": "0cb69c0a1f3d1fd2c178bbeb6e5911388605c08300c398227bb3bf2ae377e6e3",
+    "pyproject.toml": "4888e248eb69fcf7d66d7aacfaa568613e3b703cb25196b147997f8bf50b5306",
+    "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+    "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+    "exercises/exercise_2_hitl.py": "55495549fe779958cfa556b13dbd422b0fe96d424b8070e81b7f55f4cfa76d04",
+    "exercises/exercise_3_escalation.py": "5e1d0ced32f4747f284e8fa237d495fdb779ffdb390eaa619ecd9d9a5aeebf68",
+    "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+    "exercises/review_support.py": "f53e6e21d2c85c89ae58dd309488fdbe33cc5949d8967e6a11e12b3fbbd3f239",
+    "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+    "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+    "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+    "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+    "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+    "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d",
+    "audit/schema.sql": "e4048edf22a2219d1def61c8678d34ac8a3270b64f06609e6a7a5e7f582c6a99"
+  },
+  "full_suite": {
+    "command": "uv run pytest -q",
+    "exit_code": 0,
+    "stdout": "39 passed in 9.99s",
+    "execution_note": "Actual full-suite output captured earlier this turn; only Exercise 2 docstring changed afterwards."
+  },
+  "live_command": "uv run python exercises/exercise_3_escalation.py --pr https://github.com/VinUni-AI20k/PR-Demo/pull/2 --preview --evidence reports/evidence/exercise3_live.json",
+  "live_status": {
+    "file": "exercise3_live.json",
+    "initial_confidence": 0.5,
+    "question_count": 4,
+    "questions_source": "actual model output, not fallback",
+    "status": "awaiting_reviewer_answers",
+    "synthesis_live_calls": 0,
+    "publish_mode": "preview",
+    "github_comments_posted": 0
+  },
+  "live_source_differences_since_start": [
+    "exercises/exercise_2_hitl.py"
+  ],
+  "live_source_difference_note": "Exercise 2 docstring corrected after starting this process; no behavioral changes to running code.",
+  "offline_status": {
+    "file": "exercise3_offline.json",
+    "execution_mode": "synthetic fixture and scripted answers",
+    "final_action": "previewed_after_escalation",
+    "initial_confidence": 0.42,
+    "final_confidence": 0.55,
+    "network_calls": 0,
+    "github_comments_posted": 0
+  },
+  "publication_contract": "Tests use a mocked publisher for committed_after_escalation; no claim of actual GitHub publication.",
+  "browser_regression": {
+    "passed": 8,
+    "page_errors": 0,
+    "timestamp_utc": "2026-10-15T07:19:18.964195+00:00"
+  },
+  "proposed_answers": "reports/drafts/exercise3-answers.md; agent-drafted requirements awaiting reviewer input, not verified project policy",
+  "observed_model_limits": [
+    "Three questions describe concrete concerns without naming a file path; the last names _current_user_id.",
+    "Initial analysis omitted interpolated SQL and HTTP sync URL even though the diff includes both.",
+    "A claimed password-hash collision concern does not fully describe MD5 password cracking risks.",
+    "The synthesis API call returned unchanged analysis despite the extra answer context; only rendered Q&A was added. No improvement claim."
+  ],
+  "synthesis_probe": {
+    "file": "exercise3_synthesis_probe.json",
+    "mode": "saved real PR/analysis plus new real provider synthesis call",
+    "response_source": "agent-drafted synthetic test context, not actual human answers",
+    "new_synthesis_llm_calls": 1,
+    "initial_confidence": 0.5,
+    "final_confidence": 0.5,
+    "analysis_changed": false,
+    "final_action": "previewed_after_escalation",
+    "github_comments_posted": 0,
+    "draft": "reports/drafts/exercise3-review-probe.md"
+  },
+  "final_checks": [
+    {
+      "command": "uv run ruff check exercises app.py scripts tests",
+      "exit_code": 0,
+      "stdout": "All checks passed!",
+      "stderr": ""
+    },
+    {
+      "command": "uv run ruff format --check exercises app.py scripts tests",
+      "exit_code": 0,
+      "stdout": "12 files already formatted",
+      "stderr": ""
+    },
+    {
+      "command": "uv pip check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Checked 87 packages in 16ms\nAll installed packages are compatible"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --exit-code -- common audit",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

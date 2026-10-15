@@ -86,8 +86,11 @@ def approval_payload(state: ReviewState) -> dict:
 def escalation_payload(state: ReviewState) -> dict:
     a = state["analysis"]
     questions = a.escalation_questions or [
-        f"For {', '.join(state.get('pr_files', [])) or 'this diff'}, which intended behavior "
-        "and verification address these unresolved risks: " + "; ".join(a.risk_factors),
+        f"For {', '.join(state.get('pr_files', [])) or 'this diff'}, what intended behavior "
+        "and constraints should the review assume?",
+        "Which tests, migration or security requirements address these unresolved risks: "
+        + ("; ".join(a.risk_factors) or "the behavior changed by this diff")
+        + "?",
     ]
     return {**approval_payload(state), "kind": "escalation", "questions": questions}
 
@@ -132,7 +135,8 @@ def render_comment_body(state: ReviewState) -> str:
     if state.get("human_feedback") and not state.get("edited_review"):
         body += "\n\nReviewer note: " + state["human_feedback"]
     if state.get("escalation_answers"):
-        body += "\n\n**Reviewer context (not evidence of a code change):**"
+        body += "\n\n**Reviewer answered escalation questions**"
+        body += "\n\nAnswers provide context, not evidence of a code change."
         for question, answer in state["escalation_answers"].items():
             body += f"\n- {question}\n  {answer}"
     return body

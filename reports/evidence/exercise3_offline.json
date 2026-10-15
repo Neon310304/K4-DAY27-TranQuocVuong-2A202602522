@@ -1,0 +1,130 @@
+{
+  "format_version": 1,
+  "exercise": 3,
+  "pr_url": "https://github.com/demo/shop/pull/2",
+  "thread_id": "e93c1bfc-0259-4b5d-92fc-b4be4f258485",
+  "checkpointer": "MemorySaver (in-process only)",
+  "publish_mode": "preview",
+  "llm_model_requested": "gpt-4o-mini",
+  "llm_base_url": "https://api.yescale.io/v1",
+  "source_hashes": {
+    "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+    "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+    "exercises/exercise_2_hitl.py": "490e0bf66f47cbb0bdd897bd383e601b03e73047e1968d7669573b0756cdef2e",
+    "exercises/exercise_3_escalation.py": "5e1d0ced32f4747f284e8fa237d495fdb779ffdb390eaa619ecd9d9a5aeebf68",
+    "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+    "exercises/review_support.py": "f53e6e21d2c85c89ae58dd309488fdbe33cc5949d8967e6a11e12b3fbbd3f239",
+    "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+    "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+    "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+    "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+    "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+    "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d"
+  },
+  "snapshots": [
+    {
+      "pr_url": "https://github.com/demo/shop/pull/2",
+      "thread_id": "e93c1bfc-0259-4b5d-92fc-b4be4f258485",
+      "pr_title": "Offline fixture #2",
+      "pr_diff": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
+      "pr_files": [
+        "auth.py"
+      ],
+      "pr_head_sha": "0000000000000000000000000000000000000002",
+      "analysis": {
+        "summary": "Synthetic demo: login uses MD5 and interpolated SQL; block until fixed.",
+        "risk_factors": [
+          "Weak password hashing",
+          "SQL injection"
+        ],
+        "comments": [
+          {
+            "file": "auth.py",
+            "line": 1,
+            "severity": "blocker",
+            "body": "Use a password KDF such as Argon2id and parameterized SQL."
+          }
+        ],
+        "confidence": 0.42,
+        "confidence_reasoning": "Missing authentication threat model and unsafe SQL prevent a safe automatic review.",
+        "escalation_questions": [
+          "auth.py: what password hashing and migration policy is required?",
+          "auth.py: how are user-supplied SQL values parameterized and tested?"
+        ]
+      },
+      "decision": "escalate",
+      "publish_mode": "preview"
+    },
+    {
+      "pr_url": "https://github.com/demo/shop/pull/2",
+      "thread_id": "e93c1bfc-0259-4b5d-92fc-b4be4f258485",
+      "pr_title": "Offline fixture #2",
+      "pr_diff": "diff --git a/auth.py b/auth.py\n--- a/auth.py\n+++ b/auth.py\n@@ -0,0 +1,2 @@\n+password_hash = hashlib.md5(password.encode()).hexdigest()\n+db.execute(f\"SELECT * FROM users WHERE name='{name}'\")\n",
+      "pr_files": [
+        "auth.py"
+      ],
+      "pr_head_sha": "0000000000000000000000000000000000000002",
+      "analysis": {
+        "summary": "Synthetic demo: login uses MD5 and interpolated SQL; block until fixed.",
+        "risk_factors": [
+          "Weak password hashing",
+          "SQL injection"
+        ],
+        "comments": [
+          {
+            "file": "auth.py",
+            "line": 1,
+            "severity": "blocker",
+            "body": "Use a password KDF such as Argon2id and parameterized SQL."
+          }
+        ],
+        "confidence": 0.55,
+        "confidence_reasoning": "Reviewer context does not fix the insecure implementation.",
+        "escalation_questions": [
+          "auth.py: what password hashing and migration policy is required?",
+          "auth.py: how are user-supplied SQL values parameterized and tested?"
+        ]
+      },
+      "decision": "escalate",
+      "escalation_answers": {
+        "auth.py: what password hashing and migration policy is required?": "Synthetic test only: require Argon2id and migration tests; current code is unchanged.",
+        "auth.py: how are user-supplied SQL values parameterized and tested?": "Synthetic test only: require SQL parameters and regression tests; current code is unchanged."
+      },
+      "posted_comment_body": "### Automated review (confidence 55%)\n\nSynthetic demo: login uses MD5 and interpolated SQL; block until fixed.\n\n- **[blocker]** `auth.py:1` — Use a password KDF such as Argon2id and parameterized SQL.\n\n**Risks:**\n- Weak password hashing\n- SQL injection\n\n**Reviewer answered escalation questions**\n\nAnswers provide context, not evidence of a code change.\n- auth.py: what password hashing and migration policy is required?\n  Synthetic test only: require Argon2id and migration tests; current code is unchanged.\n- auth.py: how are user-supplied SQL values parameterized and tested?\n  Synthetic test only: require SQL parameters and regression tests; current code is unchanged.",
+      "final_action": "previewed_after_escalation",
+      "publish_mode": "preview",
+      "comment_url": null,
+      "synthesized": true
+    }
+  ],
+  "responses": [
+    {
+      "auth.py: what password hashing and migration policy is required?": "Synthetic test only: require Argon2id and migration tests; current code is unchanged.",
+      "auth.py: how are user-supplied SQL values parameterized and tested?": "Synthetic test only: require SQL parameters and regression tests; current code is unchanged."
+    }
+  ],
+  "pending_payload": null,
+  "timestamp_utc": "2026-10-15T07:19:04.031136+00:00",
+  "execution_mode": "offline_synthetic_fixture",
+  "response_source": "scripted validation input; not actual reviewer answers",
+  "network_calls": 0,
+  "github_comments_posted": 0,
+  "console_output": "Preview mode; no GitHub comment will be posted.\n→ fetch_pr\n  ✓ 1 files, head 0000000\n→ route\n┌──────────────────────────────────────────────── Escalation conf=42% ─────────────────────────────────────────────────┐\n│ https://github.com/demo/shop/pull/2                                                                                  │\n│                                                                                                                      │\n│ Reasoning: Missing authentication threat model and unsafe SQL prevent a safe automatic review.                       │\n│                                                                                                                      │\n│ Summary: Synthetic demo: login uses MD5 and interpolated SQL; block until fixed.                                     │\n│                                                                                                                      │\n│ Risks:                                                                                                               │\n│ Weak password hashing                                                                                                │\n│ SQL injection                                                                                                        │\n└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘\nQ: auth.py: what password hashing and migration policy is required?\nA: Q: auth.py: how are user-supplied SQL values parameterized and tested?\nA: Preview saved; no GitHub comment posted\n──────────────────────────────────────────────────────── Final ─────────────────────────────────────────────────────────\nfinal_action = previewed_after_escalation\nfinal confidence = 55%\n",
+  "subsequent_source_note": "Only Exercise 2 docstring was corrected after this offline execution; no semantic changes.",
+  "subsequent_source_hashes": {
+    "exercises/__init__.py": "cb11adc11149fc1d58bcc4985fe103712ed91d771242269b3b511db0939a534c",
+    "exercises/exercise_1_confidence.py": "521774c63ed3f49e04faa96857a4ba4e5016b6e574696e97e672d3efb66d5add",
+    "exercises/exercise_2_hitl.py": "55495549fe779958cfa556b13dbd422b0fe96d424b8070e81b7f55f4cfa76d04",
+    "exercises/exercise_3_escalation.py": "5e1d0ced32f4747f284e8fa237d495fdb779ffdb390eaa619ecd9d9a5aeebf68",
+    "exercises/exercise_4_audit.py": "d8a29bf6e726554d4659d460f2b40fcbe68617dba0b85a7c411b68d6084d03cb",
+    "exercises/review_support.py": "f53e6e21d2c85c89ae58dd309488fdbe33cc5949d8967e6a11e12b3fbbd3f239",
+    "exercises/runtime.py": "1feb02a6da80aacd860c5dd52b2882af4844fa13a2b3b05c045ddb20c9d559d4",
+    "exercises/state.py": "e908db8b303488132283a78ee4f341f21c5443e3e783154633783cd34466c3f4",
+    "common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "common/db.py": "d3b2f270b18f06c4d26a44e0bfa52016b647d0e7aa256cdcf6d4b72ca9db105a",
+    "common/github.py": "ac21e94db0644d2e32136f84ff75a7eac441b655ac0d26fcc166dea37839a955",
+    "common/llm.py": "ec73a2ded61f9a546cef21b46478b5cc02ba72d664d47944e224fdc2a91334ef",
+    "common/schemas.py": "bf69ad2737847dbd8f97944dd49cdd1608358332f4210d2b8a1f9a026e7f422d"
+  }
+}

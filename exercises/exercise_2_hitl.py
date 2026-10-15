@@ -1,6 +1,6 @@
 """Exercise 2: pause for approval; reject/edit both skip publication.
 
-The edit/confirm helpers are used by Exercise 3, which extends this graph.
+The edit/confirm helpers remain available for optional extensions.
 """
 
 from __future__ import annotations
