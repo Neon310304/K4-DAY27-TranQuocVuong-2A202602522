@@ -8,7 +8,7 @@ Repo public đã chuẩn hoá tên thành [K4-DAY27-TranQuocVuong-2A202602522](h
 
 ## Kết quả
 
-Hoàn thiện năm bài tập, UI Streamlit, routing, HITL, escalation và audit SQLite. Bộ **30 tests offline đạt**. **8 kiểm tra trình duyệt Chrome đạt**, không có page error. Dependencies tương thích theo `uv pip check`.
+Hoàn thiện năm bài tập, UI Streamlit, routing, HITL, escalation và audit SQLite. Bộ **33 tests offline đạt**. **8 kiểm tra trình duyệt Chrome đạt**, không có page error. Dependencies tương thích theo `uv pip check`.
 
 Các kết quả máy đọc được nằm trong [evidence](evidence/), ảnh nằm trong [screenshots](../screenshots/README.md). Tests dùng LangGraph và SQLite thật cùng backend giả; không được coi là API execution.
 
@@ -29,11 +29,21 @@ Các hàng dưới là hai checkpoint live được dùng trong UI. Lần kiểm
 
 Hai phiên live được mở lại trong process Streamlit/Chrome khác từ SQLite mà không gọi LLM lần nữa. Chưa có phản hồi con người hoặc bình luận GitHub trong các phiên live. Review được giữ để người dùng kiểm tra trước khi xuất bản.
 
+## Kiểm chứng riêng Exercise 2
+
+[Lần chạy CLI thật](evidence/exercise2_approval.json) lấy lại PR #1 từ GitHub và gọi YesScale, đạt **58% → human_approval**. Panel chứa đủ confidence, reasoning, summary, danh sách comment và preview diff 2.000 ký tự. Process đang dừng để người dùng kiểm tra [review đã soạn](drafts/exercise2-review.md) trước khi duyệt đăng công khai; chưa có `committed` thật. Nhận xét về migration và giới hạn priority có căn cứ trong diff; rủi ro “potential data loss” là suy đoán của model, không phải hiện tượng đã quan sát.
+
+[Replay reject](evidence/exercise2_reject.json) dùng nguyên analysis thật đã lưu, không gọi thêm LLM: `interrupt()` dừng rồi `Command(resume=...)` cùng thread trả `rejected`, không gọi publication. Đây là lựa chọn do script kiểm thử nhập. Tests kiểm tra approve bằng POST giả lập và kiểm tra cả reject/edit không đăng. Không gán kết quả đó thành lời duyệt hoặc comment thật của sinh viên.
+
+Giữ lại cả hai lần thử khác: [pipe lỗi nhập liệu/EOF](evidence/exercise2_reject_input_failure.json) sau khi model trả 58%, và [lần gọi trả 57%](evidence/exercise2_low_confidence.json) đi đúng nhánh `pending_escalation`. Các lần này không chứng minh reject thành công. Ngưỡng không thay đổi; không ép model đạt kết quả định sẵn. [exercise2_checks.json](evidence/exercise2_checks.json) liên kết source và phạm vi kiểm chứng.
+
 ## HITL và phiên bền
 
 `interrupt()` trả payload chứa diff, summary, reasoning, comments hoặc câu hỏi. Resume dùng đúng thread với `Command(resume=...)`. `AsyncSqliteSaver` được mở/đóng trong cùng event loop cho từng thao tác; mở thread đã có chỉ đọc checkpoint hoặc tiếp tục chỗ đang dừng, không gửi input khởi tạo lần nữa.
 
-Edit yêu cầu nội dung mới, lưu thành draft rồi xác nhận. Reject không gọi publication adapter. Escalation lấy Q&A làm ngữ cảnh, giữ nguyên finding chưa giải quyết, rồi yêu cầu final confirm. Confidence sau synthesize có thể thấp hơn; code không tăng điểm giả.
+Exercise 2 dùng `MemorySaver`: panel chứa đủ contract và 2.000 ký tự đầu diff; `while` resume cùng thread. `approve` mới gọi publication ở node commit; `reject` và `edit` đều trả `rejected`. Không đặt POST trước interrupt. Các tests kiểm tra không POST lúc dừng và đúng một POST giả lập sau approve. Bộ nhớ này mất khi process tắt.
+
+Exercise 3–5 mở rộng Edit: yêu cầu nội dung mới, lưu thành draft rồi xác nhận. Reject không gọi publication adapter. Escalation lấy Q&A làm ngữ cảnh, giữ nguyên finding chưa giải quyết, rồi yêu cầu final confirm. Confidence sau synthesize có thể thấp hơn; code không tăng điểm giả.
 
 Audit ghi fetch, analyze, route, automatic decision, pending HITL, reviewer response, synthesize/edit và commit/reject/failure. `reviewer_id` chỉ có ở sự kiện reviewer; nó là attribution cấu hình, không phải identity được xác thực. Thời gian `execution_time_ms` đo bằng monotonic cho lần chạy node, không đại diện tổng thời gian người duyệt chờ. Pending event được kiểm tra để không lặp khi node interrupt chạy lại trong luồng tuần tự.
 
@@ -53,7 +63,7 @@ Demo dùng fixture rõ ràng; các câu trả lời trong `offline_runs.json` l�
 1. Ngưỡng dùng hằng số 0.73/0.58, sửa sự lệch giữa TODO cũ và README.
 2. Dùng SQLite theo starter, chưa làm PostgreSQL; giữ `common/` và `audit/` nguyên bản.
 3. Thêm xác nhận cuối sau synthesis, đúng yêu cầu UI Exercise 5.
-4. Preview là mặc định; publication cần checkbox hoặc `--publish`. Không gán draft thành kết quả đã đăng.
+4. UI và CLI Exercise 3/4 mặc định preview; publication cần checkbox hoặc `--publish`. CLI Exercise 2 mặc định live theo checkpoint của đề, có `--preview` để thử cục bộ. Không gán draft thành kết quả đã đăng.
 5. Hỗ trợ YesScale qua tên biến OpenAI-compatible mà không sửa LLM factory được cấp.
 6. Sidebar quy đổi mức rủi ro thành số trước `MAX`; tránh so sánh chữ `high/low/med` theo alphabet.
 

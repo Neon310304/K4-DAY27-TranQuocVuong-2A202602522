@@ -272,6 +272,57 @@ def test_exercise2_interrupt_resume_with_memory_saver(monkeypatch):
     assert result["final_action"] == "rejected"
 
 
+@pytest.mark.parametrize("choice", ["reject", "edit"])
+def test_exercise2_nonapproval_skips_publication_even_without_feedback(monkeypatch, choice):
+    patch_early_exercises(monkeypatch)
+    posted = []
+    monkeypatch.setattr(ex2, "publish_review", lambda state: posted.append(state))
+    graph = ex2.build_graph()
+    cfg = {"configurable": {"thread_id": choice}}
+    result = graph.invoke({"pr_url": url(), "publish_mode": "live"}, cfg)
+    assert not posted
+    result = graph.invoke(Command(resume={"choice": choice, "feedback": ""}), cfg)
+    assert result["final_action"] == "rejected"
+    assert not result.get("__interrupt__")
+    assert not posted
+
+
+def test_exercise2_payload_and_approve_publish_after_interrupt_only(monkeypatch):
+    patch_early_exercises(monkeypatch)
+    original_fetch = ex1.fetch_pr
+
+    def long_diff(value):
+        pr = original_fetch(value)
+        pr.diff += "\n+test change" * 300
+        return pr
+
+    monkeypatch.setattr(ex1, "fetch_pr", long_diff)
+    posts = []
+
+    def publish(state):
+        posts.append(dict(state))
+        return {"final_action": "committed"}
+
+    monkeypatch.setattr(ex2, "publish_review", publish)
+    graph = ex2.build_graph()
+    cfg = {"configurable": {"thread_id": "approve-memory"}}
+    result = graph.invoke({"pr_url": url(), "publish_mode": "live"}, cfg)
+    assert not posts
+    payload = result["__interrupt__"][0].value
+    assert payload["kind"] == "approval_request"
+    assert payload["confidence"] == result["analysis"].confidence
+    assert payload["confidence_reasoning"] == result["analysis"].confidence_reasoning
+    assert payload["summary"] == result["analysis"].summary
+    assert payload["comments"] == [c.model_dump() for c in result["analysis"].comments]
+    assert payload["diff_preview"] == result["pr_diff"][:2000]
+    assert len(payload["diff_preview"]) == 2000
+    result = graph.invoke(Command(resume={"choice": "approve", "feedback": "Reviewed"}), cfg)
+    assert result["final_action"] == "committed"
+    assert len(posts) == 1
+    assert posts[0]["human_feedback"] == "Reviewed"
+    assert not graph.get_state(cfg).next
+
+
 def test_exercise3_refines_then_waits_for_confirmation(monkeypatch):
     patch_early_exercises(monkeypatch)
     graph = ex3.build_graph()

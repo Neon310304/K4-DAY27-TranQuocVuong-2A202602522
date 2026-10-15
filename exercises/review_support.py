@@ -92,7 +92,7 @@ def escalation_payload(state: ReviewState) -> dict:
     return {**approval_payload(state), "kind": "escalation", "questions": questions}
 
 
-def validate_choice(response: dict) -> dict:
+def validate_choice(response: dict, *, allow_empty_edit: bool = False) -> dict:
     if not isinstance(response, dict) or response.get("choice") not in {
         "approve",
         "reject",
@@ -102,7 +102,7 @@ def validate_choice(response: dict) -> dict:
     feedback = response.get("feedback") or ""
     if not isinstance(feedback, str):
         raise ValueError("Feedback must be text")
-    if response["choice"] == "edit" and not feedback.strip():
+    if response["choice"] == "edit" and not feedback.strip() and not allow_empty_edit:
         raise ValueError("Edit requires replacement review text")
     return {"human_choice": response["choice"], "human_feedback": feedback.strip()}
 
@@ -121,7 +121,7 @@ def render_comment_body(state: ReviewState) -> str:
     if state.get("edited_review"):
         body = state["edited_review"]
     else:
-        lines = [f"### PR review (confidence {a.confidence:.0%})", "", a.summary, ""]
+        lines = [f"### Automated review (confidence {a.confidence:.0%})", "", a.summary, ""]
         for comment in a.comments:
             lines.append(
                 f"- **[{comment.severity}]** `{comment.file}:{comment.line or '?'}` — {comment.body}"
